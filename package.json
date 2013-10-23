@@ -1,0 +1,12 @@
+{
+    "name": "saber-viewport",
+    "version": "0.1.0",
+    "description": "移动端视口管理，提供页面转场、视口滚动等功能",
+    "main": "main",
+    "maintainers": [
+        { "name": "treelite", "email": "c.xinle@gmail.com" }
+    ]
+    "license": "BSD",
+    "repository": "git://github.com/ecomfe/saber-viewport.git",
+    "bugs": "https://github.com/ecomfe/saber-viewport/issues"
+}

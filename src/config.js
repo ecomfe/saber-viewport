@@ -14,7 +14,7 @@ define({
      * 默认转场效果
      * @type {string}
      */
-    transition: 'slider',
+    transition: 'slide',
 
     /**
      * 默认效果时长

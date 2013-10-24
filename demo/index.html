@@ -30,11 +30,31 @@
     </script>
 </head>
 <body>
+    <p id="opt"><a href="#"></a></p>
     <div id="viewport">
         <h1>Loadding...</h1>
     </div>
     <script>
-        require(['saber-viewport', 'saber-viewport/transition/slider'], function (viewport) {
+        require(['saber-viewport', 'saber-viewport/transition/fadeInOut', 'saber-viewport/transition/slide'], function (viewport) {
+
+            var transitions = ['slide', 'fadeInOut'];
+
+            var curTransition;
+
+            function renderOpt(transition) {
+                var html = [];
+                for (var i = 0, item; item = transitions[i]; i++) {
+                    if (item == transition) {
+                        html.push('<u>' + item + '</u>');
+                    }
+                    else {
+                        html.push('<span>' + item + '</span>');
+                    }
+                }
+
+                curTransition = transition;
+                document.getElementById('opt').innerHTML = html.join('&nbsp;');
+            }
 
             function render(url) {
                 var html = ['<h1>' + url + '</h1>', '<div>'];
@@ -48,11 +68,20 @@
             function load(url) {
                 var page = viewport.load(url);
                 page.main.innerHTML = render(url);
-                page.enter();
+                page.enter(curTransition);
             }
 
+            document.getElementById('opt').onclick = function (e) {
+                var target = e.target; 
+                if (target.tagName.toLowerCase() == 'span') {
+                    var value = target.innerHTML;
+                    renderOpt(value);
+                    return false;
+                }
+            };
+
             document.getElementById('viewport').onclick = function (e) {
-                var target = e.target || e.srcElement;
+                var target = e.target;
 
                 if (target.tagName.toLowerCase() == 'a') {
                     load(target.getAttribute('data-link'));
@@ -60,6 +89,7 @@
                 }
             };
 
+            renderOpt('slide');
             viewport.init(document.getElementById('viewport'));
             load('0');
         });

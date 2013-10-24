@@ -77,6 +77,7 @@ define(function (require) {
         var viewport = config.viewport;
 
         viewport.style.overflow = 'hidden';
+        viewport.style.position = 'relative';
     }
 
     /**

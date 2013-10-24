@@ -93,7 +93,7 @@ define(function (require) {
      * @param {number} options.duration 动画时间 秒为单位
      * @param {string} options.timing 过渡速度曲线
      */
-    function slider(resolver, options) {
+    function slide(resolver, options) {
         var duration = options.duration || config.duration;
         var timing = options.timing || config.timing;
         var frontPage = options.frontPage;
@@ -123,8 +123,8 @@ define(function (require) {
         );
     }
 
-    require('../transition').register('slider', slider);
+    require('../transition').register('slide', slide);
 
-    return slider;
+    return slide;
 
 });

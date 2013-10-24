@@ -56,7 +56,8 @@
             'er', 'er/tpl', 'er/events', 'er/ajax',
             'er/Deferred', 'er/template', 'er/config',
             'common/database', 'book/init', 'cart/init', 'common/init',
-            'saber-page/adapter/er', 'saber-page/transition/slider'
+            'saber-page/adapter/er', 'saber-page/transition/slide',
+            'saber-page/transition/fadeInOut'
         ],
         function(er, tpl, events, ajax, Deferred, template, config, database, book, cart, common, viewport) {
             events.on(
@@ -66,7 +67,7 @@
                 }
             );
 
-            viewport('viewport');
+            viewport('viewport', {transition: 'slide'});
 
             config.indexURL = '/book/list';
             er.start();

@@ -3,9 +3,7 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
-define(function (require) {
-
-    var curry = require('saber-lang/curry');
+define(function () {
 
     var exports = {};
 
@@ -32,14 +30,13 @@ define(function (require) {
 
     /**
      * 设置元素样式
-     * TODO: it's not a good idea
      *
      * @public
      * @param {HTMLElement} ele
-     * @param {Object} 样式
-     * @return {Function(Object)} 链式调用，多次设置，会在之前样式应用后再设置
+     * @param {Object} propertys 样式
+     * @param {boolean} forceRefresh 是否强制刷新
      */
-    exports.setStyles = function (ele, propertys) {
+    exports.setStyles = function (ele, propertys, forceRefresh) {
         var css = [];
 
         var value;
@@ -55,19 +52,7 @@ define(function (require) {
 
         ele.style.cssText += ';' + css.join(';');
 
-        var setter = function (propertys) {
-            setTimeout(
-                curry(exports.setStyles, ele, propertys),
-                0
-            );
-            return {
-                set: setter
-            };
-        };
-
-        return {
-            set: setter
-        };
+        if (forceRefresh && ele.offsetWidth) {}
     };
 
     return exports;

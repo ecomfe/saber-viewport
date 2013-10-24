@@ -5,6 +5,7 @@
 
 define(function (require) {
 
+    var Resolver = require('saber-promise');
     var config = require('./config');
 
     /**
@@ -28,17 +29,17 @@ define(function (require) {
             throw new Error('can not find transition');
         }
 
+        var resolver = new Resolver();
         // 如果没有前景页面 
         // 直接显示待转场页面
         if (!options.frontPage) {
             config.viewport.appendChild(options.backPage.main);
-            if (options.callback) {
-                options.callback.call(null);
-            }
+            resolver.fulfill();
         }
         else {
-            handler(options);
+            handler(resolver, options);
         }
+        return resolver.promise();
     }
 
     /**

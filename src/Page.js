@@ -64,13 +64,8 @@ define(function () {
         }
 
         this.fire('enter');
-        var me = this;
-        options = options ||{};
-        options.callback = function () {
-            me.fire('afterenter');
-        };
-
-        this.viewport.transition(this, transition, options);
+        this.viewport.transition(this, transition, options)
+            .then(this.fire.bind(this, 'afterenter'));
     };
 
     /**

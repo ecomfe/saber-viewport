@@ -43,6 +43,20 @@ define(function (require) {
         });
         viewport.appendChild(container);
 
+        // 设置container的负magrinLeft
+        // 用于左滑入
+        // 强制应用 不然后续再设置动画没有效果
+        // 强制刷新得先到DOM节点中
+        if (backPage.hasVisited) {
+            util.setStyles(
+                container, 
+                {
+                    marginLeft: - frontPage.main.offsetWidth + 'px'
+                }, 
+                true
+            );
+        }
+
         return container;
     }
 
@@ -52,7 +66,7 @@ define(function (require) {
      *
      * @inner
      */
-    function finish(frontPage, backPage, callback) {
+    function finish(frontPage, backPage, resolver) {
         var viewport = config.viewport;
         var backEle = backPage.main;
         var container = backEle.parentNode;
@@ -67,20 +81,19 @@ define(function (require) {
         viewport.appendChild(backEle);
         viewport.removeChild(container);
 
-        if (callback) {
-            callback();
-        }
+        resolver.fulfill();
     }
 
     /**
      * 滑动转场
      *
      * @public
+     * @param {Resolver} resolver Resolver对象
      * @param {Object} options 转场参数
      * @param {number} options.duration 动画时间 秒为单位
      * @param {string} options.timing 过渡速度曲线
      */
-    function slider(options) {
+    function slider(resolver, options) {
         var duration = options.duration || config.duration;
         var timing = options.timing || config.timing;
         var frontPage = options.frontPage;
@@ -91,24 +104,21 @@ define(function (require) {
         // 如果已经访问过则使用右滑入
         // 正常情况使用左滑入
         if (backPage.hasVisited) {
-            // TODO 最好还是不要链式调用了...
             util.setStyles(container, {
-                marginLeft: - frontPage.main.offsetWidth + 'px'
-            }).set({
                 marginLeft: '0',
                 transition: 'margin-left ' + duration + 's ' + timing
             });
         }
         else {
             util.setStyles(container, {
-                marginLeft: - frontPage.main.offsetWidth + 'px',
+                marginLeft: -frontPage.main.offsetWidth + 'px',
                 transition: 'margin-left ' + duration + 's ' + timing
             });
         }
 
         // 动画完成后执行结束处理
         setTimeout(
-            curry(finish, frontPage, backPage, options.callback),
+            curry(finish, frontPage, backPage, resolver),
             duration * 1000
         );
     }

@@ -115,12 +115,13 @@ define(function (require) {
      * @param {Page} page 将要进行转场操作的页面
      * @param {string=} type 转场类型
      * @param {object=} options 转场参数
+     * @return {Promise}
      */
     controller.transition = function (page, type, options) {
         options = options || {};
         options.frontPage = frontPage;
         options.backPage = page;
-        transition(type, options);
+        return transition(type, options);
     };
 
     return {

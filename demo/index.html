@@ -17,6 +17,11 @@
                     location: './dep/saber-lang/0.1.0/src'
                 },
                 {
+                    name: 'saber-promise',
+                    main: 'promise',
+                    location: './dep/saber-promise/0.1.0/src'
+                },
+                {
                     name: 'saber-dom',
                     location: './dep/saber-dom/0.1.0/src'
                 }
@@ -25,7 +30,9 @@
     </script>
 </head>
 <body>
-    <div id="viewport"></div>
+    <div id="viewport">
+        <h1>Loadding...</h1>
+    </div>
     <script>
         require(['saber-viewport', 'saber-viewport/transition/slider'], function (viewport) {
 

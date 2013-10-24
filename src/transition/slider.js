@@ -42,6 +42,8 @@ define(function (require) {
             width: width + 'px'
         });
         viewport.appendChild(container);
+
+        return container;
     }
 
     /**
@@ -50,7 +52,7 @@ define(function (require) {
      *
      * @inner
      */
-    function finish(frontPage, backPage) {
+    function finish(frontPage, backPage, callback) {
         var viewport = config.viewport;
         var backEle = backPage.main;
         var container = backEle.parentNode;
@@ -64,6 +66,10 @@ define(function (require) {
         // 删除container 只留下转场页面
         viewport.appendChild(backEle);
         viewport.removeChild(container);
+
+        if (callback) {
+            callback();
+        }
     }
 
     /**
@@ -102,8 +108,8 @@ define(function (require) {
 
         // 动画完成后执行结束处理
         setTimeout(
-            curry(finish, frontPage, backPage),
-            duration * 100
+            curry(finish, frontPage, backPage, options.callback),
+            duration * 1000
         );
     }
 

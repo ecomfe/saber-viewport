@@ -13,7 +13,7 @@ define(function () {
     function Page(url, viewport) {
         this.url = url;
         this.events = {};
-        this.parent = viewport;
+        this.viewport = viewport;
         this.main = document.createElement('div');
     }
 
@@ -65,6 +65,7 @@ define(function () {
 
         this.fire('enter');
         var me = this;
+        options = options ||{};
         options.callback = function () {
             me.fire('afterenter');
         };
@@ -81,10 +82,12 @@ define(function () {
         this.fire('leave');
         if (this.main && this.main.parentNode) {
             this.main.parentNode.removeChild(this.main);
-            this.mian = null;
+            this.main = null;
         }
         this.viewport = null;
         this.fire('afterleave');
     };
+
+    return Page;
 
 });

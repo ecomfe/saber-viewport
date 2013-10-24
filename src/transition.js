@@ -18,11 +18,11 @@ define(function (require) {
      * 页面转场
      *
      * @public
-     * @param {string} type 页面转场
+     * @param {string} type 转场类型
      * @param {Object} options 转场参数
      */
     function transition(type, options) {
-        var handler = handlers[options.transition];
+        var handler = handlers[type || config.transition];
 
         if (!handler) {
             throw new Error('can not find transition');
@@ -32,6 +32,9 @@ define(function (require) {
         // 直接显示待转场页面
         if (!options.frontPage) {
             config.viewport.appendChild(options.backPage.main);
+            if (options.callback) {
+                options.callback.call(null);
+            }
         }
         else {
             handler(options);

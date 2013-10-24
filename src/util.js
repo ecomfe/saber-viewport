@@ -58,7 +58,7 @@ define(function (require) {
         var setter = function (propertys) {
             setTimeout(
                 curry(exports.setStyles, ele, propertys),
-                0;
+                0
             );
             return {
                 set: setter

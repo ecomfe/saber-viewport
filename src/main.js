@@ -129,10 +129,13 @@ define(function (require) {
          * 初始化
          *
          * @public
-         * @param {HTMLElement} ele
+         * @param {HTMLElement|string} ele
          * @param {Object} options 全局配置参数
          */
         init: function (ele, options) {
+            if (typeof ele == 'string' || ele instanceof String) {
+                ele = document.getElementById(ele);
+            }
             config = extend(config, options);
             config.viewport = ele;
 

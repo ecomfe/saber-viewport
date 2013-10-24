@@ -40,11 +40,11 @@ __注：__开发中，相关依赖暂时需要手动安装
 
 页面的容器元素
 
-### Page.enter(type, options)
+#### Page.enter(type, options)
 
 页面转场，`type`转场效果，可选；`options`转场效果配置参数，可选
 
-### Page.on(eventName, callback)
+#### Page.on(eventName, callback)
 
 注册页面事件，可选择`eventName`如下：
 

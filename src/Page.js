@@ -3,7 +3,9 @@
  * @author treelite(c.xinle@gmail.com)
  */
 
-define(function () {
+define(function (require) {
+
+    var bind = require('saber-lang/bind');
 
     /**
      * 页面类
@@ -65,7 +67,7 @@ define(function () {
 
         this.fire('enter');
         this.viewport.transition(this, transition, options)
-            .then(this.fire.bind(this, 'afterenter'));
+            .then(bind(this.fire, this, 'afterenter'));
     };
 
     /**

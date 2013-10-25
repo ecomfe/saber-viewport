@@ -100,6 +100,12 @@ define(function (require) {
         var backPage = options.backPage;
 
         var container = prepare(frontPage, backPage);
+        
+        // 注册动画完成后执行结束处理
+        util.one(
+            container, 'transitionend', 
+            curry(finish, frontPage, backPage, resolver)
+        );
 
         // 如果已经访问过则使用右滑入
         // 正常情况使用左滑入
@@ -116,11 +122,12 @@ define(function (require) {
             });
         }
 
-        // 动画完成后执行结束处理
+        /*
         setTimeout(
             curry(finish, frontPage, backPage, resolver),
             duration * 1000
         );
+        */
     }
 
     require('../transition').register('slide', slide);

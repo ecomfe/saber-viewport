@@ -55,5 +55,35 @@ define(function () {
         if (forceRefresh && ele.offsetWidth) {}
     };
 
+    var eventFix = {
+        'transitionend': [
+                            'transitionend', 'webkitTransitionEnd', 
+                            'oTransitionEnd', 'MSTransitionEnd'
+                         ]
+    };
+
+    /**
+     * 注册一次事件
+     */
+    exports.one = function (ele, eventName, callback) {
+        var events = eventFix[eventName] || [eventName];
+
+        var finished = false;
+        var handler = function (e) {
+            if (finished) {
+                return;
+            }
+            callback.call(ele, e);
+            events.forEach(function (name) {
+                ele.removeEventListener(name, handler, false);
+            });
+            finished = true;
+        };
+
+        events.forEach(function (name) {
+            ele.addEventListener(name, handler, false);
+        });
+    };
+
     return exports;
 });

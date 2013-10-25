@@ -5,8 +5,19 @@
 
 define(function (require) {
 
+    var curry = require('saber-lang/curry');
     var util = require('../util');
     var config = require('../config');
+
+    function finish(backPage, resolver) {
+        var backEle = backPage.main;
+
+        util.setStyles(backEle, {
+            position: 'static',
+            transition: '0s'
+        });
+        resolver.fulfill();
+    }
 
     function fadeInOut(resolver, options) {
         var duration = options.duration || config.duration;
@@ -28,6 +39,11 @@ define(function (require) {
             true
         );
 
+        util.one(
+            frontEle, 'transitionend', 
+            curry(finish, backPage, resolver)
+        );
+
         util.setStyles(backEle, {
             opacity: 1,
             transition: 'opacity ' + duration + 's ' + timing
@@ -37,17 +53,6 @@ define(function (require) {
             opacity: 0,
             transition: 'opacity ' + duration + 's ' + timing
         });
-
-        setTimeout(
-            function () {
-                util.setStyles(backEle, {
-                    position: 'static',
-                    transition: '0s'
-                });
-                resolver.fulfill();
-            }, 
-            duration * 1000
-        );
     }
 
     require('../transition').register('fadeInOut', fadeInOut);

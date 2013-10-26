@@ -41,17 +41,17 @@ define(function (require) {
             float: 'left',
             width: width + 'px'
         });
-        viewport.appendChild(container);
 
         // 设置container的负magrinLeft
         // 用于左滑入
         // 强制应用 不然后续再设置动画没有效果
-        // 强制刷新得先到DOM节点中
+        // 强制刷新得先将节点加入DOM树中
+        viewport.appendChild(container);
         if (backPage.hasVisited) {
             util.setStyles(
                 container, 
                 {
-                    marginLeft: - frontPage.main.offsetWidth + 'px'
+                    transform: 'translateX(-'+ frontPage.main.offsetWidth +'px)'
                 }, 
                 true
             );
@@ -76,7 +76,7 @@ define(function (require) {
             float: 'none',
             width: 'auto'
         });
-        // 调整DOM接口 
+        // 调整DOM结构
         // 删除container 只留下转场页面
         viewport.appendChild(backEle);
         viewport.removeChild(container);
@@ -109,25 +109,15 @@ define(function (require) {
 
         // 如果已经访问过则使用右滑入
         // 正常情况使用左滑入
-        if (backPage.hasVisited) {
-            util.setStyles(container, {
-                marginLeft: '0',
-                transition: 'margin-left ' + duration + 's ' + timing
-            });
-        }
-        else {
-            util.setStyles(container, {
-                marginLeft: -frontPage.main.offsetWidth + 'px',
-                transition: 'margin-left ' + duration + 's ' + timing
-            });
-        }
-
-        /*
-        setTimeout(
-            curry(finish, frontPage, backPage, resolver),
-            duration * 1000
-        );
-        */
+        util.setStyles(container, {
+            transform: 'translateX('
+                    + (backPage.hasVisited ? 0 : -frontPage.main.offsetWidth) 
+                    + 'px)',
+            // 不设置transition-property 
+            // 不然又要写一堆-webkit- -ms- ...
+            'transition-duration': duration + 's',
+            'transition-timing-function': timing
+        });
     }
 
     require('../transition').register('slide', slide);

@@ -8,11 +8,16 @@ define(function () {
     var exports = {};
 
     /**
-     * 样式补充
+     * 样式前置
      * @type {Object}
      */
-    var styleNameFix = {
-            transition: '-webkit-transition'
+    var styleNamePrefix = {
+            transition: ['-webkit-'],
+            transform: ['-webkit-', '-ms-'],
+            'transition-property': ['-webkit-', '-ms-'],
+            'transition-duration': ['-webkit-', '-ms-'],
+            'transition-timing-function': ['-webkit-', '-ms-'],
+            'transition-delay': ['-webkit-', '-ms-']
         };
 
     /**
@@ -43,10 +48,10 @@ define(function () {
         Object.keys(propertys).forEach(function (key) {
             value = propertys[key];
             key = formatStyleName(key);
-            var fixName = styleNameFix[key];
-            if (fixName) {
-                css.push(fixName + ':' + value);
-            }
+            var prefixes = styleNamePrefix[key] || [];
+            prefixes.forEach(function (prefix) {
+                css.push(prefix + key + ':' + value);
+            });
             css.push(key + ':' + value);
         });
 
@@ -55,11 +60,15 @@ define(function () {
         if (forceRefresh && ele.offsetWidth) {}
     };
 
+    /**
+     * 事件补充
+     * @type {Object}
+     */
     var eventFix = {
         'transitionend': [
-                            'transitionend', 'webkitTransitionEnd', 
-                            'oTransitionEnd', 'MSTransitionEnd'
-                         ]
+            'transitionend', 'webkitTransitionEnd', 
+            'oTransitionEnd', 'MSTransitionEnd'
+         ]
     };
 
     /**
@@ -68,16 +77,17 @@ define(function () {
     exports.one = function (ele, eventName, callback) {
         var events = eventFix[eventName] || [eventName];
 
-        var finished = false;
+        // 防止事件响应重复
+        var called = false;
         var handler = function (e) {
-            if (finished) {
+            if (called) {
                 return;
             }
             callback.call(ele, e);
             events.forEach(function (name) {
                 ele.removeEventListener(name, handler, false);
             });
-            finished = true;
+            called = true;
         };
 
         events.forEach(function (name) {

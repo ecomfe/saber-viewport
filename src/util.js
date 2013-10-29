@@ -80,14 +80,13 @@ define(function () {
         // 防止事件响应重复
         var called = false;
         var handler = function (e) {
-            if (called) {
-                return;
+            if (!called) {
+                callback.call(ele, e);
+                called = true;
             }
-            callback.call(ele, e);
             events.forEach(function (name) {
                 ele.removeEventListener(name, handler, false);
             });
-            called = true;
         };
 
         events.forEach(function (name) {

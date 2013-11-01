@@ -8,7 +8,7 @@ define(function (require) {
     var curry = require('saber-lang/curry');
     var util = require('../util');
     var config = require('../config');
-    var magic = require('saber-magic');
+    var runner = require('saber-run');
 
     function finish(backPage, resolver) {
         var backEle = backPage.main;
@@ -39,7 +39,7 @@ define(function (require) {
             true
         );
 
-        magic.transition(
+        runner.transition(
             backEle, 
             { opacity: 1 },
             {
@@ -48,7 +48,7 @@ define(function (require) {
             }
         );
 
-        var promise = magic.transition(
+        var promise = runner.transition(
             frontEle, 
             { opacity: 0 },
             {

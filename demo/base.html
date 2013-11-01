@@ -26,12 +26,23 @@
                     location: './dep/saber-dom/src'
                 },
                 {
-                    name: 'saber-magic',
-                    location: './dep/saber-magic/src'
+                    name: 'saber-run',
+                    location: './dep/saber-run/src'
                 }
             ]
         });
     </script>
+    <style>
+        .bar {
+            background: #F0F;
+            color: #FFF;
+            line-height: 1.5;
+        }
+        .bar a {
+            margin: 0 5px;
+            color: #FFF;
+        }
+    </style>
 </head>
 <body>
     <p id="opt"><a href="#"></a></p>
@@ -61,7 +72,7 @@
             }
 
             function render(url) {
-                var html = ['<h1>' + url + '</h1>', '<div>'];
+                var html = ['<h1>' + url + '</h1>', '<div class="bar" data-viewport-bar="nav" data-name="nav'+ url +'">'];
                 for (var i = 0; i < 5; i++) {
                     html.push('<a data-link="'+ i +'" href="#">Link ' + i + '</a>&nbsp;');
                 }

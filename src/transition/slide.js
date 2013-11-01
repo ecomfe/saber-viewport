@@ -6,6 +6,7 @@
 define(function (require) {
 
     var curry = require('saber-lang/curry');
+    var magic = require('saber-magic');
     var util = require('../util');
     var config = require('../config');
 
@@ -101,23 +102,20 @@ define(function (require) {
 
         var container = prepare(frontPage, backPage);
         
-        // 注册动画完成后执行结束处理
-        util.one(
-            container, 'transitionend', 
-            curry(finish, frontPage, backPage, resolver)
-        );
-
         // 如果已经访问过则使用右滑入
         // 正常情况使用左滑入
-        util.setStyles(container, {
-            transform: 'translateX('
-                    + (backPage.hasVisited ? 0 : -frontPage.main.offsetWidth) 
-                    + 'px)',
-            // 不设置transition-property 
-            // 不然又要写一堆-webkit- -ms- ...
-            'transition-duration': duration + 's',
-            'transition-timing-function': timing
-        });
+        var value = backPage.hasVisited ? 0 : -frontPage.main.offsetWidth;
+        var promise = magic.transition(
+                container,
+                { transform: 'translateX(' + value + 'px)' },
+                {
+                    duration: duration,
+                    timing: timing
+                }
+            );
+
+        // 动画完成后执行finish收尾工作
+        promise.then(curry(finish, frontPage, backPage, resolver));
     }
 
     require('../transition').register('slide', slide);

@@ -5,7 +5,32 @@
 
 define(function (require) {
 
+    var dom = require('saber-dom');
     var bind = require('saber-lang/bind');
+
+    /**
+     * 渲染页面 
+     * 获取相应的页面元素
+     *
+     * @inner
+     * @param {Page} page
+     */
+    function render(page) {
+        var main = page.main;
+        
+        var elements = dom.query('[data-viewport-bar]', main);
+        var bars = {};
+
+        if (!(elements instanceof Array)) {
+            elements = [elements];
+        }
+
+        elements.forEach(function (ele) {
+            bars[ele.getAttribute('data-viewport-bar')] = ele;
+        });
+
+        page.bars = bars;
+    }
 
     /**
      * 页面类
@@ -65,6 +90,8 @@ define(function (require) {
             return;
         }
 
+        render(this);
+
         this.fire('enter');
         this.viewport.transition(this, transition, options)
             .then(bind(this.fire, this, 'afterenter'));
@@ -77,10 +104,25 @@ define(function (require) {
      */
     Page.prototype.leave = function () {
         this.fire('leave');
+        
+        // 删除bar元素
+        if (this.bars) {
+            var me = this;
+            Object.keys(this.bars).forEach(function (key) {
+                var ele = me.bars[key];
+                if (ele.parentNode) {
+                    ele.parentNode.removeChild(ele);
+                }
+            });
+            this.bars = null;
+        }
+
+        // 删除主元素
         if (this.main && this.main.parentNode) {
             this.main.parentNode.removeChild(this.main);
             this.main = null;
         }
+
         this.viewport = null;
         this.fire('afterleave');
     };

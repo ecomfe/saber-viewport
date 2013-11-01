@@ -24,5 +24,53 @@ define(function (require) {
         if (forceRefresh && ele.offsetWidth) {}
     };
 
+    /**
+     * 获取元素的大小
+     *
+     * @public
+     * @param {HTMLElement} ele
+     * @return {Object}
+     */
+    exports.getSize = function (ele) {
+        var items = ['top', 'right', 'bottom', 'left'];
+        var res = {
+                width: ele.clientWidth,
+                height: ele.clientHeight
+            };
+
+        var value;
+        items.forEach(function (name, index) {
+            value = parseInt(dom.getStyle(ele, 'padding-' + name), 10);
+            res[index % 2 ? 'width' : 'height'] -= value;
+        });
+
+        return res;
+    };
+
+    /**
+     * 获取元素相对页面的位置
+     *
+     * @public
+     * @param {HTMLElement} ele
+     * @return {Object}
+     */
+    exports.getPosition = function (ele) {
+        var pos = ele.getBoundingClientRect();
+
+        var doc = document;
+
+        pos.top += Math.max(
+                        doc.documentElement.scrollTop,
+                        doc.body.scrollTop
+                    );
+
+        pos.left += Math.max(
+                        doc.documentElement.scrollLeft, 
+                        doc.body.scrollLeft
+                    );
+
+        return pos;
+    };
+
     return exports;
 });

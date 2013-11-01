@@ -6,7 +6,7 @@
 define(function (require) {
 
     var curry = require('saber-lang/curry');
-    var magic = require('saber-magic');
+    var runner = require('saber-run');
     var util = require('../util');
     var config = require('../config');
 
@@ -62,6 +62,84 @@ define(function (require) {
     }
 
     /**
+     * 获取两个对象相同的属性
+     *
+     * @inner
+     * @param {Object} obj1
+     * @param {Object} obj2
+     * @return {Array.<string>}
+     */
+    function getCommonKey(obj1, obj2) {
+        var res = [];
+        Object.keys(obj1).forEach(function (key) {
+            if (key in obj2) {
+                res.push(key);
+            }
+        });
+
+        return res;
+    }
+
+    /**
+     * 准备bar元素
+     * 相同类型的bar 如果name相同不需要换场效果
+     * 如果name不同需要滑入渐变转场效果
+     *
+     * @inner
+     */
+    function prepareBars(frontPage, backPage) {
+        // 获取相同的类型的bar
+        var keys = getCommonKey(
+                frontPage.bars || {}, 
+                backPage.bars || {}
+            );
+
+        var res = [];
+        keys.forEach(function (key) {
+            var item = {
+                    front: frontPage.bars[key],
+                    back: backPage.bars[key]
+                };
+
+            // name相同表示bar不需要转场效果
+            // name不同表示bar要进行滑入渐变转场
+            item.change = item.front.getAttribute('data-name') 
+                            != item.back.getAttribute('data-name');
+
+            var front = item.front;
+            // 创建一个替代元素进行占位
+            var ele = item.frontBlock = document.createElement('div');
+            ele.className = front.className;
+            ele.style.cssText += ';' 
+                                + front.style.cssText
+                                + ';padding:0;border:0'
+                                + ';width:' + front.offsetWidth + 'px'
+                                + ';height:' + front.offsetHeight + 'px';
+
+            var pos = util.getPosition(front);
+            front.parentNode.insertBefore(ele, front);
+
+            // 将前页中的bar绝对定位
+            // 遮挡住后页相同位置的带转入bar
+            ele = front;
+            item.frontCSSBack = ele.style.cssText;
+            var size = util.getSize(ele);
+            ele.style.width = size.width + 'px';
+            ele.style.height = size.height + 'px';
+            ele.style.position = 'absolute';
+            ele.style.top = pos.top + 'px';
+            ele.style.left = pos.left + 'px';
+            document.body.appendChild(ele);
+            // 强制刷新
+            !!ele.offsetWidth;
+
+            res.push(item);
+        });
+
+        return res;
+    }
+
+    /**
      * 转场结束
      * 恢复设置的样式属性
      *
@@ -101,11 +179,38 @@ define(function (require) {
         var backPage = options.backPage;
 
         var container = prepare(frontPage, backPage);
-        
+
+        var bars = prepareBars(frontPage, backPage);
+
+        // bar处理
+        bars.forEach(function (item) {
+            var frontBar = item.front;
+            var frontBarBlock = item.frontBlock;
+            var frontBarCSSBack = item.frontCSSBack;
+
+            // 设置前页bar的转化效果
+            runner.transition(
+                frontBar, 
+                { opacity: 0 },
+                {
+                    duration: duration,
+                    // 如果不需要转场效果则设置成突变转化
+                    timing: item.change ? timing : 'steps(1, end)'
+                }
+            ).then(function () {
+                // 恢复前页的bar
+                // 删除占位用的bar
+                var parentNode = frontBarBlock.parentNode;
+                frontBar.style.cssText += ';' + frontBarCSSBack;
+                parentNode.insertBefore(frontBar, frontBarBlock);
+                parentNode.removeChild(frontBarBlock);
+            });
+        });
+
         // 如果已经访问过则使用右滑入
         // 正常情况使用左滑入
         var value = backPage.hasVisited ? 0 : -frontPage.main.offsetWidth;
-        var promise = magic.transition(
+        var promise = runner.transition(
                 container,
                 { transform: 'translate3d(' + value + 'px, 0, 0)' },
                 {

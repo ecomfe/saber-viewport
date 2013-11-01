@@ -52,7 +52,7 @@ define(function (require) {
             util.setStyles(
                 container, 
                 {
-                    transform: 'translateX(-'+ frontPage.main.offsetWidth +'px)'
+                    transform: 'translate3d(-'+ frontPage.main.offsetWidth +'px, 0, 0)'
                 }, 
                 true
             );
@@ -107,7 +107,7 @@ define(function (require) {
         var value = backPage.hasVisited ? 0 : -frontPage.main.offsetWidth;
         var promise = magic.transition(
                 container,
-                { transform: 'translateX(' + value + 'px)' },
+                { transform: 'translate3d(' + value + 'px, 0, 0)' },
                 {
                     duration: duration,
                     timing: timing

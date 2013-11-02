@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <title>Toolbar Demo</title>
+    <link rel="stylesheet" href="src/common/css/main.css" />
+    <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/1-6-6/esl.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>App Name</h1>
+    </div>
+    <div id="view"><div>Loading...</div></div>
+
+<script>
+    require.config({
+        baseUrl: 'src',
+        packages: [
+            {
+                name: 'er',
+                location: '../../dep/er/src'
+            },
+            {
+                name: 'saber-viewport',
+                location: '../../../src'
+            },
+            {
+                name: 'saber-lang',
+                location: '../../dep/saber-lang/src'
+            },
+            {
+                name: 'saber-promise',
+                main: 'promise',
+                location: '../../dep/saber-promise/src'
+            },
+            {
+                name: 'saber-dom',
+                location: '../../dep/saber-dom/src'
+            },
+            {
+                name: 'saber-run',
+                location: '../../dep/saber-run/src'
+            }
+        ]
+    });
+
+    require(['common/main', 'er/events'], function (main, events) {
+        events.on('error', function (error) {
+            console.log(error);
+        });
+        main.init('view');
+    });
+</script>
+</body>
+</html>

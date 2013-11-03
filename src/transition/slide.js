@@ -193,9 +193,12 @@ define(function (require) {
                 frontBar, 
                 { opacity: 0 },
                 {
-                    duration: duration,
                     // 如果不需要转场效果则设置成突变转化
-                    timing: item.change ? timing : 'steps(1, end)'
+                    // android 2.3 不支持 steps
+                    // 改用delay模拟
+                    duration: item.change ? duration : 0.1,
+                    timing: timing,
+                    delay: item.change ? 0 : duration
                 }
             ).then(function () {
                 // 恢复前页的bar

@@ -2,8 +2,6 @@
 
 移动端页面视口管理，提供页面转场功能
 
-__注：__开发中，相关依赖暂时需要手动安装
-
 ## Usage
 
     var viewport = require('saber-viewport');
@@ -17,6 +15,41 @@ __注：__开发中，相关依赖暂时需要手动安装
     ....
     // 使用淡入淡出效果转场页面
     page.enter('fadeInOut');
+
+### About bar
+
+移动页面顶部或者底部一般都有navigation bar、toolbar之类的，这些部件在页面转场时通常不变化或者特殊变化，通过添加`data-viewport-bar`与`data-name`自定义dom属性来支持。
+
+比如现在有三个页面A、B、C，顶部都有navigation bar，前两页面bar样式相同，最后一个页面为详情页面，bar上添加了“返回”按钮，大体就如下这般：
+
+    <!-- page A -->
+    <body>
+        <div class="nav" data-viewport-bar="navigation" data-name="main">
+            ...
+        </div>
+    </body>
+
+    <!-- page B -->
+    <body>
+        <div class="nav" data-viewport-bar="navigation" data-name="main">
+            ...
+        </div>
+    </body>
+
+    <!-- page C -->
+    <body>
+        <div class="nav" data-viewport-bar="navigation" data-name="detail">
+            ...
+            <a>返回</a>
+        </div>
+    </body>
+
+通过`data-viewport-bar`分类页面中不同类型的bar，bar的转场切换只会在同类tab之间进行。`data-name`表示bar的名称，名称相同的bar转场时不会有变化，而类型相同名称不同的bar之前会有转场效果。
+
+示例中从A切换到B时顶部导航条不会有变化（`data-name`相同），而从B切换到C时顶部导航条会进行转场效果（`data-name`不同）。
+
+__注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些还是由页面控制。
+
 
 ## API
 

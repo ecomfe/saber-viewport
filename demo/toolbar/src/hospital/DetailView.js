@@ -1,6 +1,6 @@
 /**
  * @file Home View
- * @author cxl(chenxinle@baidu.com)
+ * @author treelite(c.xinle@gmail.com) 
  */
 
 define(function (require) {

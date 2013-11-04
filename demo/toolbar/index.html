@@ -50,12 +50,21 @@
         ]
     });
 
-    require(['common/main', 'er/events'], function (main, events) {
-        events.on('error', function (error) {
-            console.log(error);
-        });
-        main.init('view');
-    });
+    require(
+        [
+            'common/main',
+            'er/events',
+            'saber-tap'
+        ],
+        function (main, events, Tap) {
+            Tap.mixin( document.body );
+
+            events.on('error', function (error) {
+                console.log(error);
+            });
+            main.init('view');
+        }
+    );
 </script>
 </body>
 </html>

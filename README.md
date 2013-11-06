@@ -4,17 +4,22 @@
 
 ## Usage
 
-    var viewport = require('saber-viewport');
-    var page;
+```javascript
+var viewport = require('saber-viewport');
+var page;
 
-    // 初始化视口
-    viewport.init('viewport');
-    // 加载页面
-    page = viewport.load(url);
-    // 渲染页面
-    ....
-    // 使用淡入淡出效果转场页面
-    page.enter('fadeInOut');
+// 初始化视口
+viewport.init('viewport');
+
+// 加载页面
+page = viewport.load(url);
+
+// 渲染页面
+...
+
+// 使用淡入淡出效果转场页面
+page.enter('fadeInOut');
+```
 
 ### About bar
 
@@ -22,27 +27,29 @@
 
 比如现在有三个页面A、B、C，顶部都有navigation bar，前两页面bar样式相同，最后一个页面为详情页面，bar上添加了“返回”按钮，大体就如下这般：
 
-    <!-- page A -->
-    <body>
-        <div class="nav" data-viewport-bar="navigation" data-name="main">
-            ...
-        </div>
-    </body>
+```html
+<!-- page A -->
+<body>
+    <div class="nav" data-viewport-bar="navigation" data-name="main">
+        ...
+    </div>
+</body>
 
-    <!-- page B -->
-    <body>
-        <div class="nav" data-viewport-bar="navigation" data-name="main">
-            ...
-        </div>
-    </body>
+<!-- page B -->
+<body>
+    <div class="nav" data-viewport-bar="navigation" data-name="main">
+        ...
+    </div>
+</body>
 
-    <!-- page C -->
-    <body>
-        <div class="nav" data-viewport-bar="navigation" data-name="detail">
-            ...
-            <a>返回</a>
-        </div>
-    </body>
+<!-- page C -->
+<body>
+    <div class="nav" data-viewport-bar="navigation" data-name="detail">
+        ...
+        <a>返回</a>
+    </div>
+</body>
+```
 
 通过`data-viewport-bar`分类页面中不同类型的bar，bar的转场切换只会在同类tab之间进行。`data-name`表示bar的名称，名称相同的bar转场时不会有变化，而类型相同名称不同的bar之前会有转场效果。
 

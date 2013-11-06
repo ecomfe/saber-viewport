@@ -85,3 +85,7 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
 * `afterenter` 转场完成事件
 * `leave` 页面移除前事件
 * `afterleave` 页面移除后事件
+
+===
+
+[![Saber](https://f.cloud.github.com/assets/157338/1485433/aeb5c72a-4714-11e3-87ae-7ef8ae66e605.png)](http://ecomfe.github.io/saber/)

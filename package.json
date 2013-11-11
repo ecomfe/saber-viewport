@@ -15,6 +15,10 @@
         "saber-promise": "~0.1.0",
         "saber-run": "~0.1.0"
     },
+    "devDependencies": {
+        "er": "~3.0.2",
+        "saber-tap": "~0.1.0"
+    },
     "license": "BSD",
     "repository": "git://github.com/ecomfe/saber-viewport.git",
     "bugs": "https://github.com/ecomfe/saber-viewport/issues"

@@ -10,6 +10,7 @@ define(function (require) {
     var config = require('./config');
     var Page = require('./Page');
     var transition = require('./transition');
+    var loading = require('./loading');
 
     /**
      * 前景页面（当前呈现的页面）
@@ -69,7 +70,6 @@ define(function (require) {
 
     /**
      * 初始化视口
-     * TODO: scroll设置
      *
      * @inner
      */
@@ -119,6 +119,10 @@ define(function (require) {
      * @return {Promise}
      */
     controller.transition = function (page, type, options) {
+        if (config.loading) {
+            loading.hide();
+        }
+
         options = options || {};
         options.frontPage = frontPage;
         options.backPage = page;
@@ -164,6 +168,10 @@ define(function (require) {
             // 如果存在待转场页面则先移除
             if (backPage) {
                 backPage.leave();
+            }
+
+            if (config.loading) {
+                loading.show(config.loading);
             }
 
             return backPage = page;

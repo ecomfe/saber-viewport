@@ -26,6 +26,11 @@ define({
      * 默认转场过渡速度曲线
      * @type {string}
      */
-    timing: 'ease'
-    
+    timing: 'ease',
+
+    /**
+     * loading文案
+     * @type {string|boolean|function}
+     */
+    loading: false   
 });

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>ViewPort - loading</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/1-6-6/esl.js"></script>
+    <script>
+        require.config({
+            baseUrl: 'src',
+            packages: [
+                {
+                    name: 'saber-viewport',
+                    location: '../../src'
+                },
+                {
+                    name: 'saber-lang',
+                    location: '../dep/saber-lang/0.2.0/src'
+                },
+                {
+                    name: 'saber-promise',
+                    location: '../dep/saber-promise/0.1.0/src',
+                    main: 'promise'
+                },
+                {
+                    name: 'saber-dom',
+                    location: '../dep/saber-dom/0.3.0/src'
+                },
+                {
+                    name: 'saber-run',
+                    location: '../dep/saber-run/0.1.0/src'
+                }
+            ]
+        });
+    </script>
+    <style>
+        .bar {
+            background: #F0F;
+            color: #FFF;
+            line-height: 1.5;
+        }
+        .bar a {
+            margin: 0 5px;
+            color: #FFF;
+        }
+
+        .saber-viewport-loading {
+            width: 68px;
+            height: 60px;
+            background: url(img/loading.png) 0 0 no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <p id="opt"><a href="#"></a></p>
+    <div id="viewport">
+        <h1>Loadding...</h1>
+    </div>
+    <script>
+    require(['saber-viewport', 'saber-lang/curry', 'saber-viewport/transition/fadeInOut', 'saber-viewport/transition/slide'], 
+        function (viewport, curry) {
+
+            var transitions = ['slide', 'fadeInOut'];
+
+            var curTransition;
+
+            var loadingTimer;
+
+            function renderOpt(transition) {
+                var html = [];
+                for (var i = 0, item; item = transitions[i]; i++) {
+                    if (item == transition) {
+                        html.push('<u>' + item + '</u>');
+                    }
+                    else {
+                        html.push('<span>' + item + '</span>');
+                    }
+                }
+
+                curTransition = transition;
+                document.getElementById('opt').innerHTML = html.join('&nbsp;');
+            }
+
+            function render(url) {
+                var html = ['<h1>' + url + '</h1>', '<div class="bar" data-viewport-bar="nav" data-name="nav'+ url +'">'];
+                for (var i = 0; i < 5; i++) {
+                    html.push('<a data-link="'+ i +'" href="#">Link ' + i + '</a>&nbsp;');
+                }
+                html.push('</div>');
+                return html.join('');
+            }
+            
+            function load(url) {
+                var page = viewport.load(url);
+                page.main.innerHTML = render(url);
+                setTimeout(
+                    function () {
+                        if (loadingTimer) {
+                            clearTimeout(loadingTimer);
+                        }
+                        page.enter(curTransition);
+                    },
+                    800
+                );
+            }
+
+            document.getElementById('opt').onclick = function (e) {
+                var target = e.target; 
+                if (target.tagName.toLowerCase() == 'span') {
+                    var value = target.innerHTML;
+                    renderOpt(value);
+                    return false;
+                }
+            };
+
+            document.getElementById('viewport').onclick = function (e) {
+                var target = e.target;
+
+                if (target.tagName.toLowerCase() == 'a') {
+                    load(target.getAttribute('data-link'));
+                    return false;
+                }
+            };
+
+            function loading(ele, index) {
+                index = (index || 0) % 10; 
+
+                var top = index >= 5 ? '-60px' : '0';
+                var left = (index % 5) * -68 + 'px';
+
+                ele.style.backgroundPosition = left + ' ' + top;
+
+                loadingTimer = setTimeout(
+                    curry(loading, ele, ++index),
+                    1000 / 15
+                );
+            }
+
+            renderOpt('slide');
+            viewport.init(
+                document.getElementById('viewport'),
+                {
+                    loading: loading
+                }
+            );
+            load('0');
+        }
+    );
+    </script>
+</body>
+</html>

@@ -18,12 +18,8 @@ define(function (require) {
     function render(page) {
         var main = page.main;
         
-        var elements = dom.query('[data-viewport-bar]', main);
+        var elements = dom.queryAll('[data-viewport-bar]', main);
         var bars = {};
-
-        if (!(elements instanceof Array)) {
-            elements = [elements];
-        }
 
         elements.forEach(function (ele) {
             bars[ele.getAttribute('data-viewport-bar')] = ele;

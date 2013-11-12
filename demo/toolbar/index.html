@@ -15,7 +15,7 @@
 
 <script>
     require.config({
-        baseUrl: 'src',
+        baseUrl: './src',
         packages: [
             {
                 name: 'er',
@@ -46,6 +46,11 @@
                 name: 'saber-tap',
                 location: '../../dep/saber-tap/0.1.0/src',
                 main: 'tap'
+            },
+            {
+                name: 'saber-emitter',
+                main: 'emitter',
+                location: '../../dep/saber-emitter/0.3.0/src'
             }
         ]
     });

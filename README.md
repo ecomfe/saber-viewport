@@ -8,6 +8,9 @@
 var viewport = require('saber-viewport');
 var page;
 
+// 引入转场效果
+require('saber-viewport/transition/fadeInOut');
+
 // 初始化视口
 viewport.init('viewport');
 

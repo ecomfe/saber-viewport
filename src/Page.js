@@ -30,6 +30,29 @@ define(function (require) {
     }
 
     /**
+     * 混入
+     *
+     * @inner
+     */
+    function mixin(obj, method, page) {
+        if (!obj[method]) {
+            obj[method] = bind(page[method], page);
+        }
+        else {
+            page[method] = obj[method] = function () {
+                var args = Array.prototype.slice.call(arguments);
+
+                var res = obj[method].apply(obj, args);
+                Page.prototype[method].apply(page, args);
+
+                return res;
+            };
+        }
+
+        return obj;
+    }
+
+    /**
      * 页面类
      *
      * @constructor
@@ -48,6 +71,7 @@ define(function (require) {
      * @public
      * @param {string} transition 转场方式
      * @param {Object} options 转场配置参数
+     * @return {Promise}
      */
     Page.prototype.enter = function (transition, options) {
         if (!this.main) {
@@ -57,7 +81,7 @@ define(function (require) {
         render(this);
 
         this.emit('enter');
-        this.viewport.transition(this, transition, options)
+        return this.viewport.transition(this, transition, options)
             .then(bind(this.emit, this, 'afterenter'));
     };
 
@@ -89,6 +113,19 @@ define(function (require) {
 
         this.viewport = null;
         this.emit('afterleave');
+    };
+
+    /**
+     * 混入
+     *
+     * @public
+     * @param {Object} obj
+     * @return {Object}
+     */
+    Page.prototype.mixin = function (obj) {
+        mixin(obj, 'enter', this);
+        mixin(obj, 'leave', this);
+        return obj;
     };
 
     return Page;

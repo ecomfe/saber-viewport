@@ -108,7 +108,7 @@ define(function (require) {
 
             var front = item.front;
             // 创建一个替代元素进行占位
-            var ele = item.frontBlock = document.createElement('div');
+            var ele = item.frontBlock = document.createElement(front.tagName);
             ele.className = front.className;
             ele.style.cssText += ';' 
                                 + front.style.cssText

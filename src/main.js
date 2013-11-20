@@ -76,7 +76,6 @@ define(function (require) {
     function initViewport() {
         var viewport = config.viewport;
 
-        viewport.style.overflow = 'hidden';
         viewport.style.position = 'relative';
     }
 

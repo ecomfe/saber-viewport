@@ -6,6 +6,8 @@ body {
     line-height: 1.5;
     background-color: #F0F0F0;
     font-family: arial;
+    -wekbit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
 }
 
 h1,

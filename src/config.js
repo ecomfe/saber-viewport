@@ -29,6 +29,13 @@ define({
     timing: 'ease',
 
     /**
+     * 是否使用transform转场效果
+     * @type {boolean}
+     */
+    transform: true,
+
+
+    /**
      * loading文案
      * @type {string|boolean|function}
      */

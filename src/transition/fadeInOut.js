@@ -5,19 +5,9 @@
 
 define(function (require) {
 
-    var curry = require('saber-lang/curry');
     var util = require('../util');
     var config = require('../config');
     var runner = require('saber-run');
-
-    function finish(backPage, resolver) {
-        var backEle = backPage.main;
-
-        util.setStyles(backEle, {
-            position: 'static'
-        });
-        resolver.fulfill();
-    }
 
     function fadeInOut(resolver, options) {
         var duration = options.duration || config.duration;
@@ -28,27 +18,21 @@ define(function (require) {
         var frontEle = frontPage.main;
 
         config.viewport.insertBefore(backEle, frontEle);
+        var frontSize = util.getSize(frontEle);
+        util.setStyles(backEle, { opacity: 0 });
         util.setStyles(
-            backEle, 
+            frontEle, 
             {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                opacity: 0
+                opacity: 1,
+                width: frontSize.width + 'px'
             }, 
             true
         );
 
         runner.transition(
-            backEle, 
-            { opacity: 1 },
-            {
-                duration: duration,
-                timing: timing
-            }
-        );
-
-        var promise = runner.transition(
             frontEle, 
             { opacity: 0 },
             {
@@ -57,7 +41,18 @@ define(function (require) {
             }
         );
 
-        promise.then(curry(finish, backPage, resolver));
+        var promise = runner.transition(
+            backEle, 
+            { opacity: 1 },
+            {
+                duration: duration,
+                timing: timing
+            }
+        );
+
+        promise.then(function () {
+            resolver.fulfill();
+        });
 
     }
 

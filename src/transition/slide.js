@@ -5,6 +5,7 @@
 
 define(function (require) {
 
+    var dom = require('saber-dom');
     var curry = require('saber-lang/curry');
     var runner = require('saber-run');
     var util = require('../util');
@@ -123,12 +124,14 @@ define(function (require) {
             // 遮挡住后页相同位置的带转入bar
             ele = front;
             item.frontCSSBack = ele.style.cssText;
-            var size = util.getSize(ele);
-            ele.style.width = size.width + 'px';
-            ele.style.height = size.height + 'px';
-            ele.style.position = 'absolute';
-            ele.style.top = pos.top + 'px';
-            ele.style.left = pos.left + 'px';
+            if (dom.getStyle(ele, 'position') !== 'fixed') {
+                var size = util.getSize(ele);
+                ele.style.width = size.width + 'px';
+                ele.style.height = size.height + 'px';
+                ele.style.position = 'absolute';
+                ele.style.top = pos.top + 'px';
+                ele.style.left = pos.left + 'px';
+            }
             document.body.appendChild(ele);
             // 强制刷新
             !!ele.offsetWidth;

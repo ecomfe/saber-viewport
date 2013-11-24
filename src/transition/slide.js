@@ -254,7 +254,7 @@ define(function (require) {
 
                 if (item.backBlock) {
                     var ele = item.backBlock;
-                    ele.parentNode.insertBefore(item.backEle, ele);
+                    ele.parentNode.insertBefore(item.back, ele);
                     ele.parentNode.removeChild(ele);
                 }
             });

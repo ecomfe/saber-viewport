@@ -11,6 +11,11 @@ define(function (require) {
     var util = require('../util');
     var config = require('../config');
 
+    var DIRECTION = {
+            LEFT: 'left',
+            RIGHT: 'right'
+        };
+
     /**
      * 转场前准备
      * 添加包含元素，添加浮动等
@@ -37,7 +42,7 @@ define(function (require) {
         util.setStyles(container, styles);
 
         container.appendChild(frontEle);
-        if (backPage.hasVisited) {
+        if (options.direction == DIRECTION.LEFT) {
             container.insertBefore(backEle, frontEle);
         }
         else {
@@ -64,7 +69,7 @@ define(function (require) {
             ? { transform: 'translate3d(-'+ frontPage.main.offsetWidth +'px, 0, 0)' }
             : { marginLeft: -frontPage.main.offsetWidth + 'px' };
 
-        if (backPage.hasVisited) {
+        if (options.direction == DIRECTION.LEFT) {
             util.setStyles(
                 container, 
                 styles,
@@ -231,6 +236,7 @@ define(function (require) {
      * @param {Page} options.backPage 转场后页（转入页）
      * @param {number} options.duration 动画时间 秒为单位
      * @param {string} options.timing 过渡速度曲线
+     * @param {string} options.direction 转场方向 默认是右转入
      * @param {boolean} options.transform 是否启用transform
      */
     function slide(resolver, options) {
@@ -264,9 +270,9 @@ define(function (require) {
             );
         });
 
-        // 如果已经访问过则使用右滑入
-        // 正常情况使用左滑入
-        var value = backPage.hasVisited ? 0 : -frontPage.main.offsetWidth;
+        var value = options.direction == DIRECTION.LEFT 
+                        ? 0 
+                        : -frontPage.main.offsetWidth;
         var styles = options.transform
                         ? { transform: 'translate3d(' + value + 'px, 0, 0)' }
                         : { marginLeft: value + 'px' };
@@ -285,6 +291,10 @@ define(function (require) {
     }
 
     require('../transition').register('slide', slide);
+
+    // direction const
+    slide.RIGHT = DIRECTION.RIGHT;
+    slide.LEFT = DIRECTION.LEFT;
 
     return slide;
 

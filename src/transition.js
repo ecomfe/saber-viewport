@@ -37,6 +37,7 @@ define(function (require) {
             resolver.fulfill();
         }
         else {
+            options.frontPage.emit('beforeleave');
             handler(resolver, options);
         }
         return resolver.promise();

@@ -32,6 +32,13 @@ define(function (require) {
     var accessPath = [];
 
     /**
+     * 缓存的Page
+     *
+     * @type {Object}
+     */
+    var cachedPage = {};
+
+    /**
      * 检查url是否访问过
      *
      * @inner
@@ -153,16 +160,37 @@ define(function (require) {
          *
          * @public
          * @param {string} url
+         * @param {Object} options 配置参数
+         * @param {boolean} options.cached 是否缓存page
          * @return {Page} 页面对象
          */
-        load: function (url) {
+        load: function (url, options) {
+            var options = options || {};
+            
             // 创建新页面
-            var page = new Page(url, controller);
-            page.hasVisited = checkUrl(url);
+            var page;
+            page = cachedPage[url];
+
+            if (!page) {
+                page = new Page(url, controller, options);
+            }
+            else {
+                page = page.clone(options);
+            }
+
+            if (options.cached) {
+                cachedPage[url] = page;
+            }
+            else if (cachedPage[url]) {
+                delete cachedPage[url];
+            }
+
             // 在完成显示后记录当前显示的页面
             page.on('afterenter', function () {
                 visited(this);
             });
+
+            page.hasVisited = checkUrl(url);
             
             // 如果存在待转场页面则先移除
             if (backPage) {

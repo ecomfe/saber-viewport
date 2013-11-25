@@ -32,7 +32,7 @@ define(function (require) {
         var width = frontEle.offsetWidth;
 
         var styles = {
-                width: width * 2 + 'px',
+                width: width * 2 + 'px'
             };
         // 设置起始状态
         // 防止转场过程中产生莫名其妙的渲染问题
@@ -198,7 +198,9 @@ define(function (require) {
             var frontBar = item.front;
             var frontBarBlock = item.frontBlock;
             var parentNode = frontBarBlock.parentNode;
-            frontBar.style.cssText += ';' + item.frontCSSBack;
+            frontBar.style.cssText += ';' 
+                                    + item.frontCSSBack
+                                    + ';opacity:1';
             parentNode.insertBefore(frontBar, frontBarBlock);
             parentNode.removeChild(frontBarBlock);
         });
@@ -209,8 +211,11 @@ define(function (require) {
             width: 'auto'
         });
         // 调整DOM结构
-        // 删除container 只留下转场页面
         viewport.appendChild(backEle);
+        // frontpage已经从DOM树中移除 transitionend事件无法执行
+        // 需要手动清楚动画效果
+        util.setStyles(frontPage.main, { 'transition' : '' });
+        // 删除container
         viewport.removeChild(container);
 
         // 后页的bar复位需要在container移除后

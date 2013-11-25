@@ -182,10 +182,21 @@ define(function (require) {
      *
      * @inner
      */
-    function finish(frontPage, backPage, resolver) {
+    function finish(frontPage, backPage, bars, resolver) {
         var viewport = config.viewport;
         var backEle = backPage.main;
         var container = backEle.parentNode;
+
+        bars.forEach(function (item) {
+            // 恢复前页的bar
+            // 删除占位用的bar
+            var frontBar = item.front;
+            var frontBarBlock = item.frontBlock;
+            var parentNode = frontBarBlock.parentNode;
+            frontBar.style.cssText += ';' + item.frontCSSBack;
+            parentNode.insertBefore(frontBar, frontBarBlock);
+            parentNode.removeChild(frontBarBlock);
+        });
         
         // 还原设置的样式
         util.setStyles(backEle, {
@@ -196,6 +207,16 @@ define(function (require) {
         // 删除container 只留下转场页面
         viewport.appendChild(backEle);
         viewport.removeChild(container);
+
+        // 后页的bar复位需要在container移除后
+        // 不然transform会影响fixed的定位（表现在宽度上被拉伸）
+        bars.forEach(function (item) {
+            if (item.backBlock) {
+                var ele = item.backBlock;
+                ele.parentNode.insertBefore(item.back, ele);
+                ele.parentNode.removeChild(ele);
+            }
+        });
 
         resolver.fulfill();
     }
@@ -228,13 +249,9 @@ define(function (require) {
 
         // bar处理
         bars.forEach(function (item) {
-            var frontBar = item.front;
-            var frontBarBlock = item.frontBlock;
-            var frontBarCSSBack = item.frontCSSBack;
-
             // 设置前页bar的转化效果
             runner.transition(
-                frontBar, 
+                item.front, 
                 { opacity: 0 },
                 {
                     // 如果不需要转场效果则设置成突变转化
@@ -244,20 +261,7 @@ define(function (require) {
                     timing: timing,
                     delay: item.change ? 0 : duration
                 }
-            ).then(function () {
-                // 恢复前页的bar
-                // 删除占位用的bar
-                var parentNode = frontBarBlock.parentNode;
-                frontBar.style.cssText += ';' + frontBarCSSBack;
-                parentNode.insertBefore(frontBar, frontBarBlock);
-                parentNode.removeChild(frontBarBlock);
-
-                if (item.backBlock) {
-                    var ele = item.backBlock;
-                    ele.parentNode.insertBefore(item.back, ele);
-                    ele.parentNode.removeChild(ele);
-                }
-            });
+            );
         });
 
         // 如果已经访问过则使用右滑入
@@ -277,7 +281,7 @@ define(function (require) {
             );
         
         // 动画完成后执行finish收尾工作
-        promise.then(curry(finish, frontPage, backPage, resolver));
+        promise.then(curry(finish, frontPage, backPage, bars, resolver));
     }
 
     require('../transition').register('slide', slide);

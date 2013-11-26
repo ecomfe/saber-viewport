@@ -130,7 +130,7 @@ define(function (require) {
         }
 
         // 添加滚动中CSS样式
-        config.viewport.className += ' transiting'
+        config.viewport.className += ' transiting';
 
         options = options || {};
         options.frontPage = frontPage;
@@ -141,11 +141,17 @@ define(function (require) {
             // 虽然`saber-promise`默认触发`then`是使用`setTimeout`
             // 但是遇到浏览器支持`MutationObserver`的时候就呵呵了(iOS6+, android4.4+是支持的)
             // 所以这里还是手动`setTimeout`保证下
-            setTimeout(function () {
-                config.viewport.className = clsName.replace(/\s+transiting(\s|$)/, function ($0, $1) {
-                    return $1;
-                });
-            }, 0);
+            setTimeout(
+                function () {
+                    config.viewport.className = clsName.replace(
+                        /\s+transiting(\s|$)/, 
+                        function ($0, $1) {
+                            return $1;
+                        }
+                    );
+                }, 
+                300
+            );
         });
     };
 

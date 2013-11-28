@@ -107,17 +107,20 @@ define(function (require) {
      * @inner
      */
     function prepareBars(frontPage, backPage, options) {
+        var frontBars = frontPage.getBar();
+        var backBars = backPage.getBar();
+
         // 获取相同的类型的bar
         var keys = getCommonKey(
-                frontPage.bars || {}, 
-                backPage.bars || {}
+                frontBars || {}, 
+                backBars || {}
             );
 
         var res = [];
         keys.forEach(function (key) {
             var item = {
-                    front: frontPage.bars[key],
-                    back: backPage.bars[key]
+                    front: frontBars[key],
+                    back: backBars[key]
                 };
 
             // name相同表示bar不需要转场效果
@@ -228,6 +231,7 @@ define(function (require) {
             }
         });
 
+
         resolver.fulfill();
     }
 
@@ -254,9 +258,11 @@ define(function (require) {
                                 ? options.transform
                                 : config.transform;
 
-        var container = prepare(frontPage, backPage, options);
-
         var bars = prepareBars(frontPage, backPage, options);
+
+        // TODO 
+        // PROFORMANCE
+        var container = prepare(frontPage, backPage, options);
 
         // bar处理
         bars.forEach(function (item) {

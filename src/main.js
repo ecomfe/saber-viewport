@@ -136,6 +136,8 @@ define(function (require) {
         options.frontPage = frontPage;
         options.backPage = page;
         return transition(type, options).then(function () {
+            // TODO 
+            // PROFORMANCE
             var clsName = config.viewport.className;
             // 让渲染引擎先完成工作再移除样式
             // 虽然`saber-promise`默认触发`then`是使用`setTimeout`

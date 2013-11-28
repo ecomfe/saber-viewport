@@ -10,38 +10,11 @@ define(function (require) {
     var Emitter = require('saber-emitter');
 
     /**
-     * 渲染页面 
-     * 获取相应的页面元素
-     *
-     * @inner
-     * @param {Page} page
-     */
-    function render(page) {
-        var main = page.main;
-        
-        var elements = dom.queryAll('[data-viewport-bar]', main);
-        var bars = {};
-
-        elements.forEach(function (ele) {
-            bars[ele.getAttribute('data-viewport-bar')] = ele;
-        });
-
-        page.bars = bars;
-    }
-
-    /**
      * 入场结束后处理
      *
      * @inner
      */
     function finishTransition(page) {
-        // 缓存的页面在转场结束后需要回复滚动位置
-        if (page.cached) {
-            var ele = page.viewport;
-            var status = page.status || {};
-            ele.scrollLeft = status.scrollLeft || 0;
-            ele.scrollTop = status.scrollTop || 0;
-        }
         page.emit('afterenter');
     }
 
@@ -103,6 +76,32 @@ define(function (require) {
         this.on('beforeleave', curry(beforeleaveHandler, this));
     }
 
+    /**
+     * 获取页面中的bar
+     *
+     * @public
+     * @return {Object}
+     */
+    Page.prototype.getBar = function () {
+        var main = this.main;
+        
+        var elements = dom.queryAll('[data-viewport-bar]', main);
+        var bars = {};
+
+        elements.forEach(function (ele) {
+            bars[ele.getAttribute('data-viewport-bar')] = ele;
+        });
+
+        return bars;
+    };
+
+    /**
+     * 克隆
+     *
+     * @public
+     * @param {Object} options
+     * @return {Page}
+     */
     Page.prototype.clone = function (options) {
         var res = new Page(
                 this.url, 
@@ -126,10 +125,6 @@ define(function (require) {
     Page.prototype.enter = function (transition, options) {
         if (!this.main) {
             return;
-        }
-
-        if (!this.bars) {
-            render(this);
         }
 
         this.emit('enter');

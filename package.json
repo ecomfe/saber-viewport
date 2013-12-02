@@ -18,7 +18,7 @@
     "dependencies": {
         "saber-lang": "~0.2.0",
         "saber-dom": "~0.3.0",
-        "saber-promise": "~0.1.0",
+        "saber-promise": "~0.1.1-beta.2",
         "saber-run": "~0.1.0",
         "saber-emitter": "~0.3.0"
     },

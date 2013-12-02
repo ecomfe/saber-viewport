@@ -5,6 +5,7 @@
 
 define(function (require) {
 
+    var Resolver = require('saber-promise');
     var dom = require('saber-dom');
     var curry = require('saber-lang/curry');
     var runner = require('saber-run');
@@ -152,6 +153,18 @@ define(function (require) {
             }
             item.frontBlock = ele;
             front.parentNode.insertBefore(ele, front);
+
+            // fixed定位的bar需要移动到body下
+            // transform时fixed定位是相对与transform的父容器 
+            // 而非body
+            if (options.transform 
+                && dom.getStyle(item.back, 'position') == 'fixed'
+            ) {
+                var block = item.backBlock = document.createElement('ins');
+                block.style.display = 'none';
+                item.back.parentNode.insertBefore(block, item.back);
+                document.body.appendChild(item.back);
+            }
             
             // 将前页中的bar放置到body中并进行绝对定位
             // 遮挡住后页相同位置的待转入bar
@@ -165,15 +178,7 @@ define(function (require) {
                 ele.style.top = pos.top + 'px';
                 ele.style.left = pos.left + 'px';
             }
-            else if (options.transform) {
-                // fixed定位的bar需要移动到body下
-                // transform时fixed定位是相对与transform的父容器 
-                // 而非body
-                var block = item.backBlock = document.createElement('ins');
-                block.style.display = 'none';
-                item.back.parentNode.insertBefore(block, item.back);
-                document.body.appendChild(item.back);
-            }
+
             document.body.appendChild(ele);
             // 强制刷新
             !!ele.offsetWidth;
@@ -257,27 +262,29 @@ define(function (require) {
         options.transform = options.transform !== undefined 
                                 ? options.transform
                                 : config.transform;
-
-        var bars = prepareBars(frontPage, backPage, options);
-
         // TODO 
         // PROFORMANCE
         var container = prepare(frontPage, backPage, options);
 
+        var bars = prepareBars(frontPage, backPage, options);
+
+        var transitions = [];
         // bar处理
         bars.forEach(function (item) {
             // 设置前页bar的转化效果
-            runner.transition(
-                item.front, 
-                { opacity: 0 },
-                {
-                    // 如果不需要转场效果则设置成突变转化
-                    // android 2.3 不支持 steps
-                    // 改用delay模拟
-                    duration: item.change ? duration : 0.1,
-                    timing: timing,
-                    delay: item.change ? 0 : duration
-                }
+            transitions.push(
+                runner.transition(
+                    item.front, 
+                    { opacity: 0 },
+                    {
+                        // 如果不需要转场效果则设置成突变转化
+                        // android 2.3 不支持 steps
+                        // 改用delay模拟
+                        duration: item.change ? duration : 0.1,
+                        timing: timing,
+                        delay: item.change ? 0 : duration
+                    }
+                )
             );
         });
 
@@ -296,9 +303,11 @@ define(function (require) {
                     timing: timing
                 }
             );
+
+        transitions.push(promise);
         
         // 动画完成后执行finish收尾工作
-        promise.then(curry(finish, frontPage, backPage, bars, resolver));
+        Resolver.all(transitions).then(curry(finish, frontPage, backPage, bars, resolver));
     }
 
     require('../transition').register('slide', slide);

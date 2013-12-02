@@ -23,13 +23,24 @@ define(function (require) {
      * @param {Object} options 转场参数
      */
     function transition(type, options) {
+        var resolver = new Resolver();
+        
+        // 不进行转场动画
+        if (config.transition === false) {
+            if (options.frontPage) {
+                options.frontPage.emit('beforeleave');
+            }
+            config.viewport.appendChild(options.backPage.main);
+            resolver.fulfill();
+            return resolver.promise();
+        }
+
         var handler = handlers[type || config.transition];
 
         if (!handler) {
             throw new Error('can not find transition');
         }
 
-        var resolver = new Resolver();
         // 如果没有前景页面 
         // 直接显示待转场页面
         if (!options.frontPage) {

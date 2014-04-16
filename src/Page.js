@@ -119,7 +119,7 @@ define(function (require) {
      * 以指定的转场方式进入页面
      *
      * @public
-     * @param {string} transition 转场方式
+     * @param {string|boolean=} transition 转场方式
      * @param {Object} options 转场配置参数
      */
     Page.prototype.enter = function (transition, options) {

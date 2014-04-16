@@ -19,14 +19,16 @@ define(function (require) {
      * 页面转场
      *
      * @public
-     * @param {string} type 转场类型
+     * @param {string|boolean=} type 转场类型
      * @param {Object} options 转场参数
      */
     function transition(type, options) {
         var resolver = new Resolver();
         
         // 不进行转场动画
-        if (config.transition === false) {
+        if (config.transition === false
+            || type === false
+        ) {
             if (options.frontPage) {
                 options.frontPage.emit('beforeleave');
             }

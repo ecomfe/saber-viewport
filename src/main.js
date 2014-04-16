@@ -120,7 +120,7 @@ define(function (require) {
      *
      * @protected
      * @param {Page} page 将要进行转场操作的页面
-     * @param {string=} type 转场类型
+     * @param {string|boolean=} type 转场类型
      * @param {object=} options 转场参数
      * @return {Promise}
      */

@@ -20,7 +20,7 @@ define({
      * 默认效果时长
      * @type {number}
      */
-    duration: 0.5,
+    duration: 0.3,
 
     /**
      * 默认转场过渡速度曲线

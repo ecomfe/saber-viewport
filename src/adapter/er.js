@@ -62,7 +62,7 @@ define(function (require) {
             // 完成转场后再调用
             var leaveHandler = context.action.leave;
             context.action.leave = blank;
-            page.on('leave', function () {
+            page.on('afterleave', function () {
                 leaveHandler.call(context.action);
             });
 

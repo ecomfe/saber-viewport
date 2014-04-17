@@ -29,9 +29,6 @@ define(function (require) {
         if (config.transition === false
             || type === false
         ) {
-            if (options.frontPage) {
-                options.frontPage.emit('beforeleave');
-            }
             config.viewport.appendChild(options.backPage.main);
             resolver.fulfill();
             return resolver.promise();
@@ -50,7 +47,6 @@ define(function (require) {
             resolver.fulfill();
         }
         else {
-            options.frontPage.emit('beforeleave');
             handler(resolver, options);
         }
         return resolver.promise();

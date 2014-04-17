@@ -10,30 +10,6 @@ define(function (require) {
     var Emitter = require('saber-emitter');
 
     /**
-     * 入场结束后处理
-     *
-     * @inner
-     */
-    function finishTransition(page) {
-        page.emit('afterenter');
-    }
-
-    /**
-     * 出场前处理
-     *
-     * @inner
-     */
-    function beforeleaveHandler(page) {
-        if (page.cached) {
-            var ele = page.viewport;
-            var status = page.status || {};
-            status.scrollLeft = ele.scrollLeft;
-            status.scrollTop = ele.scrollTop;
-            page.status = status;
-        }
-    }
-
-    /**
      * 销毁
      *
      * @inner
@@ -72,8 +48,6 @@ define(function (require) {
         this.viewport = viewport;
         this.cached = options.cached;
         this.main = options.main || document.createElement('div');
-
-        this.on('beforeleave', curry(beforeleaveHandler, this));
     }
 
     /**
@@ -127,9 +101,7 @@ define(function (require) {
             return;
         }
 
-        this.emit('enter');
-        this.viewport.transition(this, transition, options)
-            .then(curry(finishTransition, this));
+        this.viewport.transition(this, transition, options);
     };
 
     /**
@@ -137,17 +109,13 @@ define(function (require) {
      *
      * @public
      */
-    Page.prototype.leave = function () {
-        this.emit('leave');
-
+    Page.prototype.dipose = function () {
         if (!this.cached) {
             dispose(this);
         }
         else if (this.main && this.main.parentNode) {
             this.main.parentNode.removeChild(this.main);
         }
-        
-        this.emit('afterleave');
     };
 
     return Page;

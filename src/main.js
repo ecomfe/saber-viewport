@@ -7,6 +7,8 @@ define(function (require) {
 
     var dom = require('saber-dom');
     var extend = require('saber-lang/extend');
+    var curry = require('saber-lang/curry');
+
     var config = require('./config');
     var Page = require('./Page');
     var transition = require('./transition');
@@ -66,13 +68,6 @@ define(function (require) {
         }
 
         accessPath.push(url);
-
-        if (frontPage) {
-            frontPage.leave();
-        }
-        
-        backPage = null;
-        frontPage = page;
     }
 
     /**
@@ -109,6 +104,44 @@ define(function (require) {
     }
 
     /**
+     * 转场开始前处理
+     *
+     * @inner
+     * @param {Page} frontPage 前景页
+     * @param {Page} backPage 后景页
+     */
+    function beforeTransition(front, back) {
+        // 触发转场前事件
+        if (front) {
+            front.emit('beforeleave');
+        }
+        back.emit('beforeenter');
+    }
+
+    /**
+     * 转场结束后处理
+     *
+     * @inner
+     * @param {Page} frontPage 前景页
+     * @param {Page} backPage 后景页
+     */
+    function afterTransition(front, back) {
+        // 触发转场完成事件
+        if (front) {
+            front.emit('afterleave');
+            front.dipose();
+        }
+        back.emit('afterenter');
+
+        // 记录当前访问的页面
+        visited(back);
+
+        // 切换前后场景页
+        backPage = null;
+        frontPage = back;
+    }
+
+    /**
      * 视图控制器
      *
      * @type {Object}
@@ -122,7 +155,6 @@ define(function (require) {
      * @param {Page} page 将要进行转场操作的页面
      * @param {string|boolean=} type 转场类型
      * @param {object=} options 转场参数
-     * @return {Promise}
      */
     controller.transition = function (page, type, options) {
         if (config.loading) {
@@ -133,7 +165,10 @@ define(function (require) {
         options.frontPage = frontPage;
         options.backPage = page;
 
-        return transition(type, options);
+        beforeTransition(frontPage, page);
+
+        transition(type, options)
+            .then(curry(afterTransition, frontPage, page));
     };
 
     return {
@@ -185,11 +220,6 @@ define(function (require) {
             else if (cachedPage[url]) {
                 delete cachedPage[url];
             }
-
-            // 在完成显示后记录当前显示的页面
-            page.on('afterenter', function () {
-                visited(this);
-            });
 
             page.hasVisited = checkUrl(url);
             

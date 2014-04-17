@@ -93,12 +93,16 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
 
 #### Page.on(eventName, callback)
 
-注册页面事件，可选择`eventName`如下：
+注册页面事件，可选择的`eventName`如下：
 
-* `enter` 转场前事件
-* `afterenter` 转场完成事件
-* `leave` 页面移除前事件
-* `afterleave` 页面移除后事件
+* `beforeleave` 前景页转出前事件
+* `beforeenter` 后景页转入前事件
+* `afterleave` 前景页转出完成事件
+* `afterenter` 后景页转入完成事件
+
+__前景页__：当前显示、待转出的页面
+
+__后景页__：待转入的页面
 
 ===
 

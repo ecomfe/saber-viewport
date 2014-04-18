@@ -155,6 +155,7 @@ define(function (require) {
      * @param {Page} page 将要进行转场操作的页面
      * @param {string|boolean=} type 转场类型
      * @param {object=} options 转场参数
+     * @param {Promise}
      */
     controller.transition = function (page, type, options) {
         if (config.loading) {
@@ -167,7 +168,7 @@ define(function (require) {
 
         beforeTransition(frontPage, page);
 
-        transition(type, options)
+        return transition(type, options)
             .then(curry(afterTransition, frontPage, page));
     };
 

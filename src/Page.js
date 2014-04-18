@@ -101,7 +101,7 @@ define(function (require) {
             return;
         }
 
-        this.viewport.transition(this, transition, options);
+        return this.viewport.transition(this, transition, options);
     };
 
     /**

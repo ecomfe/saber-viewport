@@ -51,13 +51,19 @@ define(function (require) {
         }
 
         // 设置浮动
+        //
+        // 添加position:relative 使视图容器成为可定位元素
+        // 使内部的absolute元素能参与转场效果
+        // 如果内部元素起初不相当于参考视图容器定位则需要在转场前后(利用事件)进行位置调整
         util.setStyles(frontEle, {
             float: 'left',
-            width: width + 'px'
+            width: width + 'px',
+            position: 'relative'
         });
         util.setStyles(backEle, {
             float: 'left',
-            width: width + 'px'
+            width: width + 'px',
+            position: 'relative'
         });
 
         // 设置container的负magrinLeft
@@ -216,7 +222,8 @@ define(function (require) {
         // 还原设置的样式
         util.setStyles(backEle, {
             float: 'none',
-            width: 'auto'
+            width: 'auto',
+            position: 'static'
         });
         // 调整DOM结构
         viewport.appendChild(backEle);

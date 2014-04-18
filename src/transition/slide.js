@@ -8,6 +8,7 @@ define(function (require) {
     var Resolver = require('saber-promise');
     var dom = require('saber-dom');
     var curry = require('saber-lang/curry');
+    var extend = require('saber-lang/extend');
     var runner = require('saber-run');
     var util = require('../util');
     var config = require('../config');
@@ -16,6 +17,109 @@ define(function (require) {
             LEFT: 'left',
             RIGHT: 'right'
         };
+
+    /**
+     * 附加处理器
+     *
+     * @type {Object}
+     */
+    var processor = {};
+
+    /**
+     * fixed定位处理器
+     */
+    processor.fixed = {
+        /**
+         * transition前处理
+         */
+        before: function (front, back) {
+            var eles = front.getFixed();
+            eles = eles.concat(back.getFixed());
+
+            // 添加不配对的bar
+            var frontBar = front.getBar();
+            var backBar = back.getBar();
+            var commonKeys = getCommonKey(frontBar, backBar);
+            var bar = extend(frontBar, backBar);
+            Object.keys(bar).forEach(function (key) {
+                if (commonKeys.indexOf(key) < 0) {
+                    eles.push(bar[key]);
+                }
+            });
+
+            this.fixedEles = eles;
+            var attrData = this.data = [];
+
+            var attrs = ['top', 'left', 'right', 'bottom'];
+            var data;
+            var value;
+            var pos;
+            eles.forEach(function (ele) {
+                // 保存原始位置信息
+                data = {};
+                attrs.forEach(function (key) {
+                    data[key] = dom.getStyle(ele, key);
+                });
+                attrData.push(data);
+
+                // 当前位置计算
+                pos = dom.position(ele);
+                // 计算margin-top, margin-left
+                for (var i = 0, max = 2; i < max; i++) {
+                    value = parseInt(dom.getStyle(ele, 'margin-' + attrs[i]), 10);
+                    if (!isNaN(value)) {
+                        pos[attrs[i]] -= value;
+                    }
+                }
+
+                // 改变position
+                util.setStyles(ele, {
+                    position: 'absolute',
+                    top: pos.top + 'px',
+                    left: pos.left + 'px',
+                    bottom: data.bottom == '0px' ? '0px' : 'auto',
+                    right: data.right == '0px' ? '0px' : 'auto'
+                });
+            });
+        },
+
+        /**
+         * transition完成处理
+         */
+        after: function () {
+            var data;
+            var attrData = this.data;
+            this.fixedEles.forEach(function (ele, index) {
+                data = attrData[index];
+                util.setStyles(ele, {
+                    position: 'fixed',
+                    top: data.top || 'auto',
+                    left: data.left || 'auto',
+                    bottom: data.bottom || 'auto',
+                    right: data.right || 'auto'
+                });
+            });
+        }
+    };
+
+    /**
+     * 按任务运行所有处理器
+     *
+     * @inner
+     * @param {string} name 任务名称
+     * @param {Page} front 前景页
+     * @param {Page} back 后景页
+     * @param {Object} options
+     */
+    function runProcessor(name, front, back, options) {
+        var item;
+        Object.keys(processor).forEach(function (key) {
+            item = processor[key];
+            if (item[name]) {
+                item[name](front, back, options);
+            }
+        });
+    }
 
     /**
      * 转场前准备
@@ -35,11 +139,7 @@ define(function (require) {
         var styles = {
                 width: width * 2 + 'px'
             };
-        // 设置起始状态
-        // 防止转场过程中产生莫名其妙的渲染问题
-        if (options.transform) {
-            styles.transform = 'translate3d(0, 0, 0)';
-        }
+
         util.setStyles(container, styles);
 
         container.appendChild(frontEle);
@@ -72,17 +172,26 @@ define(function (require) {
         // 强制刷新得先将节点加入DOM树中
         viewport.appendChild(container);
 
-        styles = options.transform
-            ? { transform: 'translate3d(-'+ frontPage.main.offsetWidth +'px, 0, 0)' }
-            : { marginLeft: -frontPage.main.offsetWidth + 'px' };
+        // 在设置'translate3d'之前调用before处理器
+        // translate3d + fixed 悲剧妥妥的...
+        runProcessor('before', frontPage, backPage, options);
 
+        // 设置初始容器位置
         if (options.direction == DIRECTION.LEFT) {
-            util.setStyles(
-                container, 
-                styles,
-                true
-            );
+            styles = options.transform
+                ? { transform: 'translate3d(-'+ frontPage.main.offsetWidth +'px, 0, 0)' }
+                : { marginLeft: -frontPage.main.offsetWidth + 'px' };
         }
+        else if (options.transform) {
+            // 设置默认的起始状态
+            // 防止转场过程中产生莫名其妙的渲染问题
+            styles.transform = 'translate3d(0, 0, 0)'; 
+        }
+        util.setStyles(
+            container, 
+            styles,
+            true
+        );
 
         return container;
     }
@@ -225,6 +334,7 @@ define(function (require) {
             width: 'auto',
             position: 'static'
         });
+
         // 调整DOM结构
         viewport.appendChild(backEle);
         // frontpage已经从DOM树中移除 transitionend事件无法执行
@@ -243,7 +353,8 @@ define(function (require) {
             }
         });
 
-
+        runProcessor('after', frontPage, backPage);
+        
         resolver.fulfill();
     }
 

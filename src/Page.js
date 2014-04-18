@@ -9,6 +9,10 @@ define(function (require) {
     var curry = require('saber-lang/curry');
     var Emitter = require('saber-emitter');
 
+    var ATTR_PREFX = 'data-viewport';
+    var ATTR_BAR = ATTR_PREFX + '-bar';
+    var ATTR_FIXED = ATTR_PREFX + '-fixed';
+
     /**
      * 销毁
      *
@@ -59,14 +63,26 @@ define(function (require) {
     Page.prototype.getBar = function () {
         var main = this.main;
         
-        var elements = dom.queryAll('[data-viewport-bar]', main);
+        var elements = dom.queryAll('[' + ATTR_BAR + ']', main);
         var bars = {};
 
         elements.forEach(function (ele) {
-            bars[ele.getAttribute('data-viewport-bar')] = ele;
+            bars[ele.getAttribute(ATTR_BAR)] = ele;
         });
 
         return bars;
+    };
+
+    /**
+     * 获取页面中的fixed元素
+     *
+     * @public
+     * @return {Array.<HTMLElement>}
+     */
+    Page.prototype.getFixed = function () {
+        var main = this.main;
+
+        return dom.queryAll('[' + ATTR_FIXED + ']', main);
     };
 
     /**

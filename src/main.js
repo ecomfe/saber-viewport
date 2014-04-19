@@ -27,48 +27,11 @@ define(function (require) {
     var backPage;
 
     /**
-     * url访问记录
-     *
-     * @type {Array.<string>}
-     */
-    var accessPath = [];
-
-    /**
      * 缓存的Page
      *
      * @type {Object}
      */
     var cachedPage = {};
-
-    /**
-     * 检查url是否访问过
-     *
-     * @inner
-     * @param {string} url
-     * @param {boolean}
-     */
-    function checkUrl(url) {
-        var index = accessPath.indexOf(url);
-        
-        return index >= 0 && index < accessPath.length - 1;
-    }
-
-    /**
-     * 记录访问的页面
-     *
-     * @inner
-     * @param {Page} page
-     */
-    function visited(page) {
-        var url = page.url;
-        var index = accessPath.indexOf(url);
-
-        if (index >= 0) {
-            accessPath.splice(index);
-        }
-
-        accessPath.push(url);
-    }
 
     /**
      * 初始化视口
@@ -132,9 +95,6 @@ define(function (require) {
             front.dipose();
         }
         back.emit('afterenter');
-
-        // 记录当前访问的页面
-        visited(back);
 
         // 切换前后场景页
         backPage = null;
@@ -222,11 +182,9 @@ define(function (require) {
                 delete cachedPage[url];
             }
 
-            page.hasVisited = checkUrl(url);
-            
             // 如果存在待转场页面则先移除
             if (backPage) {
-                backPage.leave();
+                backPage.dipose();
             }
 
             if (config.loading) {

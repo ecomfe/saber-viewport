@@ -5,16 +5,11 @@
 
 define({
     /**
-     * 视图容器
-     * @type {HTMLElement}
-     */
-    viewport: null,
-
-    /**
      * 默认转场效果
-     * @type {string}
+     *
+     * @type {boolean|string}
      */
-    transition: 'slide',
+    transition: true,
 
     /**
      * 默认效果时长
@@ -36,8 +31,8 @@ define({
 
 
     /**
-     * loading文案
-     * @type {string|boolean|function}
+     * 转场mask 默认开启
+     * @type {boolean}
      */
-    loading: false   
+    mask: true
 });

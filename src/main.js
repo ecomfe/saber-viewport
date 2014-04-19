@@ -194,7 +194,10 @@ define(function (require) {
 
             // 如果存在待转场页面则先移除
             if (backPage) {
-                backPage.remove();
+                backPage.remove(true);
+                if (cachedPage[backPage.url]) {
+                    delete cachedPage[backPage.url];
+                }
             }
 
             return backPage = page;

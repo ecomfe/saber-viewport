@@ -115,9 +115,10 @@ define(function (require) {
      * 页面移除
      *
      * @public
+     * @param {boolean} force 强制移除 忽略缓存
      */
-    Page.prototype.remove = function () {
-        if (!this.cached) {
+    Page.prototype.remove = function (force) {
+        if (!this.cached || force == true) {
             dispose(this);
         }
         else if (this.main && this.main.parentNode) {

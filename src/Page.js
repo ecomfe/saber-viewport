@@ -6,7 +6,7 @@
 define(function (require) {
 
     var dom = require('saber-dom');
-    var curry = require('saber-lang/curry');
+    var Resolver = require('saber-promise');
     var Emitter = require('saber-emitter');
 
     var ATTR_PREFX = 'data-viewport';
@@ -111,10 +111,13 @@ define(function (require) {
      * @public
      * @param {string|boolean=} transition 转场方式
      * @param {Object} options 转场配置参数
+     * @return {Promise}
      */
     Page.prototype.enter = function (transition, options) {
-        if (!this.main) {
-            return;
+        // 如果当前页面已经移除
+        // 不再进行转场操作
+        if (!this.main || !this.main.parentNode) {
+            return Resolver.rejected();
         }
 
         return this.viewport.transition(this, transition, options);

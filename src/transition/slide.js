@@ -36,13 +36,15 @@ define(function (require) {
             var eles = front.getFixed();
             eles = eles.concat(back.getFixed());
 
-            // 添加不配对的bar
+            // 添加不配对的fixed bar
             var frontBar = front.getBar();
             var backBar = back.getBar();
             var commonKeys = getCommonKey(frontBar, backBar);
             var bar = extend(frontBar, backBar);
             Object.keys(bar).forEach(function (key) {
-                if (commonKeys.indexOf(key) < 0) {
+                if (commonKeys.indexOf(key) < 0
+                    && dom.getStyle(bar[key], 'position') == 'fixed'
+                ) {
                     eles.push(bar[key]);
                 }
             });

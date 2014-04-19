@@ -15,7 +15,9 @@ define(function (require) {
 
     return {
         init: function (ele) {
-            viewport(ele);
+            viewport(ele, {
+                transition: 'slide'
+            });
             config.indexURL = '/hospital/home';
             er.start();
         }

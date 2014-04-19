@@ -92,7 +92,7 @@ define(function (require) {
         // 触发转场完成事件
         if (front) {
             front.emit('afterleave');
-            front.dipose();
+            front.remove();
         }
         back.emit('afterenter');
 
@@ -118,6 +118,12 @@ define(function (require) {
      * @param {Promise}
      */
     controller.transition = function (page, type, options) {
+        // 转场页面不是当前后景页面
+        // 则放弃转场
+        if (page !== backPage) {
+            return Resolver.rejected();
+        }
+
         if (config.loading) {
             loading.hide();
         }
@@ -184,7 +190,7 @@ define(function (require) {
 
             // 如果存在待转场页面则先移除
             if (backPage) {
-                backPage.dipose();
+                backPage.remove();
             }
 
             if (config.loading) {

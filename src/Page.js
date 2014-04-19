@@ -19,23 +19,11 @@ define(function (require) {
      * @inner
      */
     function dispose(page) {
-        if (page.bars) {
-            Object.keys(page.bars).forEach(function (key) {
-                var ele = page.bars[key];
-                if (ele.parentNode) {
-                    ele.parentNode.removeChild(ele);
-                }
-            });
-            page.bars = null;
-        }
-
         // 删除主元素
-        if (page.main) {
-            if (page.main.parentNode) {
-                page.main.parentNode.removeChild(page.main);
-            }
-            page.main = null;
+        if (page.main && page.main.parentNode) {
+            page.main.parentNode.removeChild(page.main);
         }
+        page.main = null;
 
         page.viewport = null;
     }
@@ -116,7 +104,7 @@ define(function (require) {
     Page.prototype.enter = function (transition, options) {
         // 如果当前页面已经移除
         // 不再进行转场操作
-        if (!this.main || !this.main.parentNode) {
+        if (!this.main) {
             return Resolver.rejected();
         }
 
@@ -128,7 +116,7 @@ define(function (require) {
      *
      * @public
      */
-    Page.prototype.dipose = function () {
+    Page.prototype.remove = function () {
         if (!this.cached) {
             dispose(this);
         }

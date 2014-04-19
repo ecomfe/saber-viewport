@@ -12,7 +12,7 @@ define(function (require) {
     var config = require('./config');
     var Page = require('./Page');
     var transition = require('./transition');
-    var loading = require('./loading');
+    var mask = require('./mask');
 
     /**
      * 前景页面（当前呈现的页面）
@@ -79,6 +79,10 @@ define(function (require) {
             front.emit('beforeleave');
         }
         back.emit('beforeenter');
+
+        if (config.mask) {
+            mask.show();
+        }
     }
 
     /**
@@ -89,6 +93,10 @@ define(function (require) {
      * @param {Page} backPage 后景页
      */
     function afterTransition(front, back) {
+        if (config.mask) {
+            mask.hide();
+        }
+
         // 触发转场完成事件
         if (front) {
             front.emit('afterleave');
@@ -124,10 +132,6 @@ define(function (require) {
             return Resolver.rejected();
         }
 
-        if (config.loading) {
-            loading.hide();
-        }
-
         options = options || {};
         options.frontPage = frontPage;
         options.backPage = page;
@@ -144,7 +148,7 @@ define(function (require) {
          *
          * @public
          * @param {HTMLElement|string} ele
-         * @param {Object} options 全局配置参数
+         * @param {Object} options 全局配置参数 参考`./config.js`
          */
         init: function (ele, options) {
             if (typeof ele == 'string' || ele instanceof String) {
@@ -191,10 +195,6 @@ define(function (require) {
             // 如果存在待转场页面则先移除
             if (backPage) {
                 backPage.remove();
-            }
-
-            if (config.loading) {
-                loading.show(config.loading);
             }
 
             return backPage = page;

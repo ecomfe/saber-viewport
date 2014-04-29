@@ -1,6 +1,6 @@
 {
     "name": "saber-viewport",
-    "version": "0.2.8",
+    "version": "0.2.9",
     "description": "移动端页面视口管理，提供页面转场功能",
     "main": "main",
     "maintainers": [
@@ -16,11 +16,11 @@
         }
     ],
     "dependencies": {
-        "saber-lang": "~0.3.0",
+        "saber-lang": "~0.3.1",
         "saber-dom": "~0.4.0",
         "saber-promise": "~0.1.2",
         "saber-run": "~0.2.0",
-        "saber-emitter": "~0.3.1"
+        "saber-emitter": "~0.5.0"
     },
     "devDependencies": {
         "er": "~3.0.2",

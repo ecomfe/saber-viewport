@@ -1,6 +1,6 @@
 /**
  * @file 滑动转场
- * @authro treelite(c.xinle@gmail.com)
+ * @author treelite(c.xinle@gmail.com)
  */
 
 define(function (require) {

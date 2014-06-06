@@ -8,6 +8,7 @@ define(function (require) {
     var dom = require('saber-dom');
     var extend = require('saber-lang/extend');
     var curry = require('saber-lang/curry');
+    var Resolver = require('saber-promise');
 
     var config = require('./config');
     var Page = require('./Page');
@@ -67,6 +68,36 @@ define(function (require) {
     }
 
     /**
+     * 转场前进行滚动设置
+     *
+     * @inner
+     * @param {Page} frontPage 前景页
+     * @param {Page} backPage 后景页
+     */
+    function setScrollBefore(front, back) {
+        // FIXME
+        // 不应该直接用body，万一场景是页面内多viewport呢
+        // 后续改成配置项
+        var height = front.scrollTop = document.body.scrollTop;
+        var scrollHeight = back.scrollTop || 0;
+        height -= scrollHeight;
+
+        document.body.scrollTop = scrollHeight;
+        front.main.style.marginTop = '-' + height + 'px';
+    }
+
+    /**
+     * 转场后清理滚动设置
+     *
+     * @inner
+     * @param {Page} frontPage 前景页
+     * @param {Page} backPage 后景页
+     */
+    function setScrollAfter(front) {
+        front.main.style.marginTop = 0;
+    }
+
+    /**
      * 转场开始前处理
      *
      * @inner
@@ -77,6 +108,7 @@ define(function (require) {
         // 触发转场前事件
         if (front) {
             front.emit('beforeleave');
+            setScrollBefore(front, back);
         }
         back.emit('beforeenter');
 
@@ -100,6 +132,7 @@ define(function (require) {
         // 触发转场完成事件
         if (front) {
             front.emit('afterleave');
+            setScrollAfter(front, back);
             front.remove();
         }
         back.emit('afterenter');

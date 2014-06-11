@@ -75,15 +75,11 @@ define(function (require) {
      * @param {Page} backPage 后景页
      */
     function setScrollBefore(front, back) {
-        // FIXME
-        // 不应该直接用body，万一场景是页面内多viewport呢
-        // 后续改成配置项
-        var height = front.scrollTop = document.body.scrollTop;
-        var scrollHeight = back.scrollTop || 0;
-        height -= scrollHeight;
+        var container = config.container;
+        var height = front.data.scrollTop = container.scrollTop;
+        var scrollHeight = back.data.scrollTop || 0;
 
-        document.body.scrollTop = scrollHeight;
-        front.main.style.marginTop = '-' + height + 'px';
+        back.main.style.marginTop = height - scrollHeight + 'px';
     }
 
     /**
@@ -93,8 +89,9 @@ define(function (require) {
      * @param {Page} frontPage 前景页
      * @param {Page} backPage 后景页
      */
-    function setScrollAfter(front) {
-        front.main.style.marginTop = 0;
+    function setScrollAfter(front, back) {
+        back.main.style.marginTop = 0;
+        config.container.scrollTop = back.data.scrollTop || 0;
     }
 
     /**

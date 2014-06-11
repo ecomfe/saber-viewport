@@ -36,6 +36,7 @@ define(function (require) {
     function Page(url, viewport, options) {
         options = options || {};
         Emitter.mixin(this);
+        this.data = options.data || {};
         this.url = url;
         this.viewport = viewport;
         this.cached = options.cached;
@@ -86,7 +87,8 @@ define(function (require) {
                 this.viewport, 
                 { 
                     cached: options.cached,
-                    main: this.main
+                    main: this.main,
+                    data: this.data
                 }
             );
 

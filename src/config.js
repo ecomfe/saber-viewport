@@ -34,5 +34,12 @@ define({
      * 转场mask 默认开启
      * @type {boolean}
      */
-    mask: true
+    mask: true,
+
+    /**
+     * 容器元素
+     * 目前用于计算转场时页面滚动高度
+     * @type {HTMLElement}
+     */
+    container: document.body
 });

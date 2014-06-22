@@ -35,6 +35,13 @@ define(function (require) {
     var cachedPage = {};
 
     /**
+     * URL访问记录
+     *
+     * @type {Array.<string>}
+     */
+    var visitHistory = [];
+
+    /**
      * 初始化视口
      *
      * @inner
@@ -98,8 +105,8 @@ define(function (require) {
      * 转场开始前处理
      *
      * @inner
-     * @param {Page} frontPage 前景页
-     * @param {Page} backPage 后景页
+     * @param {Page} front 前景页
+     * @param {Page} back 后景页
      */
     function beforeTransition(front, back) {
         // 触发转场前事件
@@ -120,8 +127,8 @@ define(function (require) {
      * 转场结束后处理
      *
      * @inner
-     * @param {Page} frontPage 前景页
-     * @param {Page} backPage 后景页
+     * @param {Page} front 前景页
+     * @param {Page} back 后景页
      */
     function afterTransition(front, back) {
         if (config.mask) {
@@ -141,6 +148,12 @@ define(function (require) {
         // 切换前后场景页
         backPage = null;
         frontPage = back;
+
+        // 保存访问记录
+        if (back.hasVisited) {
+            visitHistory = visitHistory.slice(0, visitHistory.indexOf(back.url));
+        }
+        visitHistory.push(back.url);
     }
 
     /**
@@ -233,6 +246,8 @@ define(function (require) {
                     delete cachedPage[backPage.url];
                 }
             }
+
+            page.hasVisited = visitHistory.indexOf(url) >= 0;
 
             return backPage = page;
         }

@@ -391,6 +391,11 @@ define(function (require) {
         options.transform = options.transform !== undefined 
                                 ? options.transform
                                 : config.transform;
+
+        // 转场方向设置
+        options.direction = options.direction
+            || backPage.hasVisited ? DIRECTION.LEFT : DIRECTION.RIGHT;
+
         // TODO 
         // PROFORMANCE
         var container = prepare(frontPage, backPage, options);

@@ -40,6 +40,7 @@ define(function (require) {
         this.url = url;
         this.viewport = viewport;
         this.cached = options.cached;
+        this.hasVisited = !!options.hasVisited;
         this.main = options.main || document.createElement('div');
     }
 
@@ -88,7 +89,8 @@ define(function (require) {
                 { 
                     cached: options.cached,
                     main: this.main,
-                    data: this.data
+                    data: this.data,
+                    hasVisited: this.hasVisited
                 }
             );
 

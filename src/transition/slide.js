@@ -34,6 +34,7 @@ define(function (require) {
          */
         before: function (front, back) {
             var eles = front.getFixed();
+            var frontFixedNum = eles.length;
             eles = eles.concat(back.getFixed());
 
             // 添加不配对的fixed bar
@@ -52,15 +53,19 @@ define(function (require) {
             this.fixedEles = eles;
             var attrData = this.data = [];
 
-            var attrs = ['top', 'left', 'right', 'bottom'];
+            var attrs = ['top', 'left', 'right', 'bottom', 'width', 'height', 'position'];
             var data;
             var value;
             var pos;
-            eles.forEach(function (ele) {
-                // 保存原始位置信息
+            var parent = front.main;
+            eles.forEach(function (ele, index) {
+                if (index >= frontFixedNum) {
+                    parent = back.main;
+                }
+                // 保存原始样式信息
                 data = {};
                 attrs.forEach(function (key) {
-                    data[key] = dom.getStyle(ele, key);
+                    data[key] = ele.style[key] || null;
                 });
                 attrData.push(data);
 
@@ -72,6 +77,12 @@ define(function (require) {
                     if (!isNaN(value)) {
                         pos[attrs[i]] -= value;
                     }
+
+                    // 修正offsetParent的margin影响
+                    value = parseInt(dom.getStyle(parent, 'margin-' + attrs[i]), 10);
+                    if (!isNaN(value)) {
+                        pos[attrs[i]] -= value;
+                    }
                 }
 
                 // 改变position
@@ -79,8 +90,10 @@ define(function (require) {
                     position: 'absolute',
                     top: pos.top + 'px',
                     left: pos.left + 'px',
-                    bottom: data.bottom == '0px' ? '0px' : 'auto',
-                    right: data.right == '0px' ? '0px' : 'auto'
+                    width: dom.getStyle(ele, 'width') + 'px',
+                    height: dom.getStyle(ele, 'height') + 'px',
+                    bottom: 'auto',
+                    right: 'atuo'
                 });
             });
         },
@@ -93,12 +106,8 @@ define(function (require) {
             var attrData = this.data;
             this.fixedEles.forEach(function (ele, index) {
                 data = attrData[index];
-                util.setStyles(ele, {
-                    position: 'fixed',
-                    top: data.top || 'auto',
-                    left: data.left || 'auto',
-                    bottom: data.bottom || 'auto',
-                    right: data.right || 'auto'
+                Object.keys(data).forEach(function (key) {
+                    ele.style[key] = data[key];
                 });
             });
         }

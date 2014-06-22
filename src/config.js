@@ -13,33 +13,45 @@ define({
 
     /**
      * 默认效果时长
+     *
      * @type {number}
      */
     duration: 0.3,
 
     /**
-     * 默认转场过渡速度曲线
+     * 默认转场缓动效果
+     * 取值请参考CSS:transition-timing-function
+     *
      * @type {string}
      */
     timing: 'ease',
 
     /**
-     * 是否使用transform转场效果
+     * 是否启用transform转场效果
+     *
      * @type {boolean}
      */
     transform: true,
 
 
     /**
-     * 转场mask 默认开启
+     * 转场mask
+     *
      * @type {boolean}
      */
     mask: true,
 
     /**
-     * 容器元素
-     * 目前用于计算转场时页面滚动高度
+     * 转场滚动条修正
+     *
+     * @type {boolean}
+     */
+    resetScroll: true,
+
+    /**
+     * 滚动容器元素
+     *
      * @type {HTMLElement}
      */
-    container: document.body
+    scrollContainer: document.body
 });

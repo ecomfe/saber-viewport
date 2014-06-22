@@ -75,7 +75,7 @@ define(function (require) {
      * @param {Page} backPage 后景页
      */
     function setScrollBefore(front, back) {
-        var container = config.container;
+        var container = config.scrollContainer;
         var height = front.data.scrollTop = container.scrollTop;
         var scrollHeight = back.data.scrollTop || 0;
 
@@ -91,7 +91,7 @@ define(function (require) {
      */
     function setScrollAfter(front, back) {
         back.main.style.marginTop = 0;
-        config.container.scrollTop = back.data.scrollTop || 0;
+        config.scrollContainer.scrollTop = back.data.scrollTop || 0;
     }
 
     /**
@@ -105,7 +105,9 @@ define(function (require) {
         // 触发转场前事件
         if (front) {
             front.emit('beforeleave');
-            setScrollBefore(front, back);
+            if (config.resetScroll) {
+                setScrollBefore(front, back);
+            }
         }
         back.emit('beforeenter');
 
@@ -129,7 +131,9 @@ define(function (require) {
         // 触发转场完成事件
         if (front) {
             front.emit('afterleave');
-            setScrollAfter(front, back);
+            if (config.resetScroll) {
+                setScrollAfter(front, back);
+            }
             front.remove();
         }
         back.emit('afterenter');

@@ -42,6 +42,38 @@ define(function (require) {
     var visitHistory = [];
 
     /**
+     * 转场页面滚动处理器
+     *
+     * @type {Object}
+     */
+    var scrollProcessor = {
+        /**
+         * 转场前处理
+         *
+         * @param {Page} front
+         * @param {Page} back
+         */
+        before: function (front, back) {
+            var container = config.scrollContainer;
+            var height = front.data.scrollTop = container.scrollTop;
+            var scrollHeight = back.data.scrollTop || 0;
+
+            back.main.style.marginTop = height - scrollHeight + 'px';
+        },
+        /**
+         * 转场后处理
+         *
+         * @param {Page} front
+         * @param {Page} back
+         */
+        after: function (front, back) {
+            var container = config.scrollContainer;
+            back.main.style.marginTop = null;
+            container.scrollTop = back.data.scrollTop || 0;
+        }
+    };
+
+    /**
      * 初始化视口
      *
      * @inner
@@ -75,33 +107,6 @@ define(function (require) {
     }
 
     /**
-     * 转场前进行滚动设置
-     *
-     * @inner
-     * @param {Page} frontPage 前景页
-     * @param {Page} backPage 后景页
-     */
-    function setScrollBefore(front, back) {
-        var container = config.scrollContainer;
-        var height = front.data.scrollTop = container.scrollTop;
-        var scrollHeight = back.data.scrollTop || 0;
-
-        back.main.style.marginTop = height - scrollHeight + 'px';
-    }
-
-    /**
-     * 转场后清理滚动设置
-     *
-     * @inner
-     * @param {Page} frontPage 前景页
-     * @param {Page} backPage 后景页
-     */
-    function setScrollAfter(front, back) {
-        back.main.style.marginTop = 0;
-        config.scrollContainer.scrollTop = back.data.scrollTop || 0;
-    }
-
-    /**
      * 转场开始前处理
      *
      * @inner
@@ -112,9 +117,6 @@ define(function (require) {
         // 触发转场前事件
         if (front) {
             front.emit('beforeleave');
-            if (config.resetScroll) {
-                setScrollBefore(front, back);
-            }
         }
         back.emit('beforeenter');
 
@@ -138,9 +140,6 @@ define(function (require) {
         // 触发转场完成事件
         if (front) {
             front.emit('afterleave');
-            if (config.resetScroll) {
-                setScrollAfter(front, back);
-            }
             front.remove();
         }
         back.emit('afterenter');
@@ -182,6 +181,11 @@ define(function (require) {
         options = options || {};
         options.frontPage = frontPage;
         options.backPage = page;
+        options.processor = {};
+        // 添加需要的处理器
+        if (config.resetScroll) {
+            options.processor.scroll = scrollProcessor;
+        }
 
         beforeTransition(frontPage, page);
 

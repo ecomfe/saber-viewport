@@ -26,9 +26,16 @@ define(function (require) {
     var processor = {};
 
     /**
+     * 内建的处理器
+     *
+     * @type {Object}
+     */
+    var buildinProcessor = {};
+
+    /**
      * fixed定位处理器
      */
-    processor.fixed = {
+    buildinProcessor.fixed = {
         /**
          * transition前处理
          */
@@ -395,6 +402,9 @@ define(function (require) {
         // 转场方向设置
         options.direction = options.direction
             || backPage.hasVisited ? DIRECTION.LEFT : DIRECTION.RIGHT;
+
+        // 设置处理器
+        processor = extend(options.processor || {}, buildinProcessor);
 
         // TODO 
         // PROFORMANCE

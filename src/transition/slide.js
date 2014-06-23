@@ -401,7 +401,7 @@ define(function (require) {
 
         // 转场方向设置
         options.direction = options.direction
-            || backPage.hasVisited ? DIRECTION.LEFT : DIRECTION.RIGHT;
+            || (backPage.hasVisited ? DIRECTION.LEFT : DIRECTION.RIGHT);
 
         // 设置处理器
         processor = extend(options.processor || {}, buildinProcessor);

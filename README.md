@@ -24,7 +24,7 @@ page = viewport.load(url);
 page.enter('fadeInOut');
 ```
 
-### About bar
+### About Bar
 
 移动页面顶部或者底部一般都有navigation bar、toolbar之类的，这些部件在页面转场时通常不变化或者特殊变化，通过添加`data-viewport-bar`与`data-name`自定义dom属性来支持。
 
@@ -60,20 +60,31 @@ page.enter('fadeInOut');
 
 __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些还是由页面控制。
 
+### About Fixed
+
+转场操作时`position:fixed`的元素会影响转场效果（特别是在使用`transform`进行转场时，参考[webkit-css-transform3d-position-fixed-issue](http://stackoverflow.com/questions/15194313/webkit-css-transform3d-position-fixed-issue), [The Transform Rendering Model](http://www.w3.org/TR/css3-transforms/#transform-rendering)），`saber-viewport`支持使用`data-viewport-fixed`标注`fixed`元素，在转场时进行自动处理，比如：
+
+```html
+<div class="search" data-viewport-fixed><input type="text"><a class="search-btn">Search</a></div>
+```
+
+已经被`data-viewport-bar`标记的`fixed`元素不再需要重复标记`data-viewport-fixed`
+
 
 ## API
 
 ### init(ele, options)
 
-初始化视口，`ele`为DOM元素或者id，`options`为可选配置参数：
+初始化视口
 
-* `options.transition` `string` 默认转场效果，目前支持`slide`滑动转场，`fadeInOut`淡入淡出转场
-* `options.duration` `number` 默认转场动画时长，单位为秒
-* `options.timing` `string` 默认转场过渡速度，取值请参考CSS3中的`transition-timing-function`
-* `options.transform` `boolean` 是否默认使用[css transform](http://local:8849/demo/toolbar/index.html#/hospital/home)进行转场设置，默认为`true`。
-* `options.loading` `boolean|string|Function` 转场时加载提示文案，在调用`load`与`Page.enter`之间出现，默认为`false`不显示，为`Function`时回调函数的参数为提示文案的容器元素，具体请参见`demo/loading.html`
-
-*注：*当使用`transform`优化转场效果时需要注意容器内的`position:fixed`元素，请参考[issue](http://stackoverflow.com/questions/15194313/webkit-css-transform3d-position-fixed-issue), [The Transform Rendering Model](http://www.w3.org/TR/css3-transforms/#transform-rendering)
+* `ele` `{HTMLElement}` 视图主元素或者元素id
+* `options` `{Object=}` 全局配置参数
+* `options.transition` `{boolean|string=}` 转场效果，`boolean`参数表示是否启用转场效果，`string`参数表示具体的转场效果，目前支持`slide`滑动转场，`fadeInOut`淡入淡出转场，默认为`true`，表示启动转场效果，但不指定默认的转场效果
+* `options.duration` `{number=}` 转场动画时长，单位为秒，默认为`0.3`
+* `options.timing` `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)，默认为`'ease'`
+* `options.transform` `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置，默认为`true`
+* `options.mask` `{boolean=}` 转场动画进行时使用全局遮罩浮层，防止由于页面操作意外终止转场动画，默认为`true`
+* `options.resetScroll` `{boolean=}` 转场是否启用页面scroll修正，默认为`true`
 
 ### load(string)
 
@@ -89,7 +100,13 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
 
 #### Page.enter(type, options)
 
-页面转场，`type`转场效果，可选；`options`转场效果配置参数，可选
+启动页面转场
+
+* `type` `{boolean|string}` 转场效果，`boolean`参数表示是否启用转场效果，`string`参数表示具体的转场效果
+* `options` `{object=}` 转场效果配置
+* `options.duration` `{number=}` 转场动画时长，单位为秒
+* `options.timing` `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)
+* `options.transform` `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置
 
 #### Page.on(eventName, callback)
 

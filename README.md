@@ -84,6 +84,7 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
 * `options.timing` `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)，默认为`'ease'`
 * `options.transform` `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置，默认为`true`
 * `options.mask` `{boolean=}` 转场动画进行时使用全局遮罩浮层，防止由于页面操作意外终止转场动画，默认为`true`
+* `options.resetScroll` `{boolean=}` 转场是否启用页面scroll修正，默认为`true`
 
 ### load(string)
 

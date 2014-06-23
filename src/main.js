@@ -8,6 +8,7 @@ define(function (require) {
     var dom = require('saber-dom');
     var extend = require('saber-lang/extend');
     var curry = require('saber-lang/curry');
+    var Resolver = require('saber-promise');
 
     var config = require('./config');
     var Page = require('./Page');
@@ -32,6 +33,45 @@ define(function (require) {
      * @type {Object}
      */
     var cachedPage = {};
+
+    /**
+     * URL访问记录
+     *
+     * @type {Array.<string>}
+     */
+    var visitHistory = [];
+
+    /**
+     * 转场页面滚动处理器
+     *
+     * @type {Object}
+     */
+    var scrollProcessor = {
+        /**
+         * 转场前处理
+         *
+         * @param {Page} front
+         * @param {Page} back
+         */
+        before: function (front, back) {
+            var container = config.scrollContainer;
+            var height = front.data.scrollTop = container.scrollTop;
+            var scrollHeight = back.data.scrollTop || 0;
+
+            back.main.style.marginTop = height - scrollHeight + 'px';
+        },
+        /**
+         * 转场后处理
+         *
+         * @param {Page} front
+         * @param {Page} back
+         */
+        after: function (front, back) {
+            var container = config.scrollContainer;
+            back.main.style.marginTop = null;
+            container.scrollTop = back.data.scrollTop || 0;
+        }
+    };
 
     /**
      * 初始化视口
@@ -70,8 +110,8 @@ define(function (require) {
      * 转场开始前处理
      *
      * @inner
-     * @param {Page} frontPage 前景页
-     * @param {Page} backPage 后景页
+     * @param {Page} front 前景页
+     * @param {Page} back 后景页
      */
     function beforeTransition(front, back) {
         // 触发转场前事件
@@ -89,8 +129,8 @@ define(function (require) {
      * 转场结束后处理
      *
      * @inner
-     * @param {Page} frontPage 前景页
-     * @param {Page} backPage 后景页
+     * @param {Page} front 前景页
+     * @param {Page} back 后景页
      */
     function afterTransition(front, back) {
         if (config.mask) {
@@ -107,6 +147,12 @@ define(function (require) {
         // 切换前后场景页
         backPage = null;
         frontPage = back;
+
+        // 保存访问记录
+        if (back.hasVisited) {
+            visitHistory = visitHistory.slice(0, visitHistory.indexOf(back.url));
+        }
+        visitHistory.push(back.url);
     }
 
     /**
@@ -135,6 +181,11 @@ define(function (require) {
         options = options || {};
         options.frontPage = frontPage;
         options.backPage = page;
+        options.processor = {};
+        // 添加需要的处理器
+        if (config.resetScroll) {
+            options.processor.scroll = scrollProcessor;
+        }
 
         beforeTransition(frontPage, page);
 
@@ -199,6 +250,8 @@ define(function (require) {
                     delete cachedPage[backPage.url];
                 }
             }
+
+            page.hasVisited = visitHistory.indexOf(url) >= 0;
 
             return backPage = page;
         }

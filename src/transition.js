@@ -24,31 +24,27 @@ define(function (require) {
      */
     function transition(type, options) {
         var resolver = new Resolver();
-        
+
         // 不进行转场动画
         if (config.transition === false
             || type === false
+            || !options.frontPage // 没有前景页
+            // 前景页与后景页容器元素相同
+            // 被缓存的page同时加载两次时出现
+            || options.frontPage.main == options.backPage.main
         ) {
-            config.viewport.appendChild(options.backPage.main);
-            resolver.fulfill();
-            return resolver.promise();
-        }
-
-        var handler = handlers[type || config.transition];
-
-        if (!handler) {
-            throw new Error('can not find transition');
-        }
-
-        // 如果没有前景页面 
-        // 直接显示待转场页面
-        if (!options.frontPage) {
             config.viewport.appendChild(options.backPage.main);
             resolver.fulfill();
         }
         else {
+            var handler = handlers[type || config.transition];
+
+            if (!handler) {
+                throw new Error('can not find transition');
+            }
             handler(resolver, options);
         }
+
         return resolver.promise();
     }
 

@@ -140,7 +140,11 @@ define(function (require) {
         // 触发转场完成事件
         if (front) {
             front.emit('afterleave');
-            front.remove();
+            // 如果前景页与后景页的容器元素相同
+            // 则不再对前景页进行销毁操作
+            if (front.main != back.main) {
+                front.remove();
+            }
         }
         back.emit('afterenter');
 

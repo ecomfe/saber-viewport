@@ -69,7 +69,9 @@ define(function (require) {
         after: function (front, back) {
             var container = config.scrollContainer;
             back.main.style.marginTop = null;
-            container.scrollTop = back.data.scrollTop || 0;
+            setTimeout(function () {
+                container.scrollTop = back.data.scrollTop || 0;
+            }, 10);
         }
     };
 

@@ -225,15 +225,18 @@ define(function (require) {
          * @public
          * @param {string} url
          * @param {Object} options 配置参数
-         * @param {boolean} options.cached 是否缓存page
+         * @param {boolean=} options.cached 是否缓存page
+         * @param {boolean=} options.noCache 是否使用缓存
          * @return {Page} 页面对象
          */
         load: function (url, options) {
-            var options = options || {};
+            options = options || {};
             
             // 创建新页面
             var page;
-            page = cachedPage[url];
+            if (!options.noCache) {
+                page = cachedPage[url];
+            }
 
             if (!page) {
                 page = new Page(url, controller, options);

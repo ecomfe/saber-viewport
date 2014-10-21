@@ -31,7 +31,6 @@ define(function (require) {
      * 修正view的render
      *
      * @inner
-     * @param {HTMLElement} ele Page主容器
      * @param {Page} page 待转场页面
      */
     function fixRender(page) {

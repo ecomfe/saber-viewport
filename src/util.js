@@ -21,7 +21,7 @@ define(function (require) {
         Object.keys(propertys).forEach(function (name) {
             dom.setStyle(ele, name, propertys[name]);
         });
-        if (forceRefresh && ele.offsetWidth) {}
+        forceRefresh && ele.offsetWidth;
     };
 
     /**

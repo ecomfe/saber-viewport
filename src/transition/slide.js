@@ -174,12 +174,12 @@ define(function (require) {
         // 使内部的absolute元素能参与转场效果
         // 如果内部元素起初不相当于参考视图容器定位则需要在转场前后(利用事件)进行位置调整
         util.setStyles(frontEle, {
-            float: 'left',
+            'float': 'left',
             width: width + 'px',
             position: 'relative'
         });
         util.setStyles(backEle, {
-            float: 'left',
+            'float': 'left',
             width: width + 'px',
             position: 'relative'
         });
@@ -197,7 +197,7 @@ define(function (require) {
         // 设置初始容器位置
         if (options.direction == DIRECTION.LEFT) {
             styles = options.transform
-                ? { transform: 'translate3d(-'+ frontPage.main.offsetWidth +'px, 0, 0)' }
+                ? { transform: 'translate3d(-' + frontPage.main.offsetWidth + 'px, 0, 0)' }
                 : { marginLeft: -frontPage.main.offsetWidth + 'px' };
         }
         else if (options.transform) {
@@ -348,7 +348,7 @@ define(function (require) {
         
         // 还原设置的样式
         util.setStyles(backEle, {
-            float: 'none',
+            'float': 'none',
             width: 'auto',
             position: 'static'
         });

@@ -175,7 +175,7 @@ define(function (require) {
      * @param {Page} page 将要进行转场操作的页面
      * @param {string|boolean=} type 转场类型
      * @param {object=} options 转场参数
-     * @param {Promise}
+     * @return {Promise}
      */
     controller.transition = function (page, type, options) {
         // 转场页面不是当前后景页面
@@ -263,6 +263,21 @@ define(function (require) {
             page.hasVisited = visitHistory.indexOf(url) >= 0;
 
             return backPage = page;
+        },
+
+        /**
+         * 删除缓存
+         *
+         * @public
+         * @param {string} url
+         */
+        delCache: function (url) {
+            if (!url) {
+                cachedPage = {};
+            }
+            else if (cachedPage[url]) {
+                delete cachedPage[url];
+            }
         }
     };
 });

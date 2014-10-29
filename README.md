@@ -1,10 +1,19 @@
-# saber-viewport
+saber-viewport
+===
 
 移动端页面视口管理，提供页面转场功能
 
+## Installation
+
+通过 [edp](https://github.com/ecomfe/edp) 引入模块：
+
+```sh
+edp import saber-viewport
+```
+
 ## Usage
 
-```javascript
+```js
 var viewport = require('saber-viewport');
 var page;
 
@@ -73,59 +82,30 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
 
 ## API
 
-### .init(ele, options)
+* [Methods](#methods)
+* [Classes](#classes)
+
+### Methods
+
+#### init(ele[, options])
 
 初始化视口
 
-* `ele` `{HTMLElement}` 视图主元素或者元素id
-* `options` `{Object=}` 全局配置参数
-* `options.transition` `{boolean|string=}` 转场效果，`boolean`参数表示是否启用转场效果，`string`参数表示具体的转场效果，目前支持`slide`滑动转场，`fadeInOut`淡入淡出转场，默认为`true`，表示启动转场效果，但不指定默认的转场效果
-* `options.duration` `{number=}` 转场动画时长，单位为秒，默认为`0.3`
-* `options.timing` `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)，默认为`'ease'`
-* `options.transform` `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置，默认为`true`
-* `options.mask` `{boolean=}` 转场动画进行时使用全局遮罩浮层，防止由于页面操作意外终止转场动画，默认为`true`
-* `options.resetScroll` `{boolean=}` 转场是否启用页面scroll修正，默认为`true`
+* **ele** `{HTMLElement}` 视图主元素或者元素id
+* **options** `{Object=}` 全局配置参数
+    * **transition** `{boolean|string=}` 转场效果，`boolean`参数表示是否启用转场效果，`string`参数表示具体的转场效果，目前支持`slide`滑动转场，`fadeInOut`淡入淡出转场，默认为`true`，表示启动转场效果，但不指定默认的转场效果
+    * **duration** `{number=}` 转场动画时长，单位为秒，默认为`0.3`
+    * **timing** `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)，默认为`'ease'`
+    * **transform** `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置，默认为`true`
+    * **mask** `{boolean=}` 转场动画进行时使用全局遮罩浮层，防止由于页面操作意外终止转场动画，默认为`true`
+    * **resetScroll** `{boolean=}` 转场是否启用页面scroll修正，默认为`true`
 
-### .load(url, options)
+#### load(url[, options])
 
 创建新页面的容器，返回`Page`对象。页面的具体渲染需要通过`Page.main`属性获取容器元素后自行完成
 
-* `url` `{string}` 页面的URL，用于页面标示
-* `options` `{Object=}` 选项参数
-* `options.cache` `{boolean=}` 是否缓存page 默认`false`
-* `options.noCache` `{boolean=}` 是否不启用缓存 默认`false`
-
-### Page
-
-页面对象，由`load()`方法创建、返回
-
-#### .main
-
-页面的容器元素
-
-#### .enter(type, options)
-
-启动页面转场
-
-* `type` `{boolean|string}` 转场效果，`boolean`参数表示是否启用转场效果，`string`参数表示具体的转场效果
-* `options` `{object=}` 转场效果配置
-* `options.duration` `{number=}` 转场动画时长，单位为秒
-* `options.timing` `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)
-* `options.transform` `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置
-
-#### .on(eventName, callback)
-
-注册页面事件，可选择的`eventName`如下：
-
-* `beforeleave` 前景页转出前事件
-* `beforeenter` 后景页转入前事件
-* `afterleave` 前景页转出完成事件
-* `afterenter` 后景页转入完成事件
-
-__前景页__：当前显示、待转出的页面
-
-__后景页__：待转入的页面
-
-===
-
-[![Saber](https://f.cloud.github.com/assets/157338/1485433/aeb5c72a-4714-11e3-87ae-7ef8ae66e605.png)](http://ecomfe.github.io/saber/)
+* **url** `{string}` 页面的URL，用于页面标示
+* **options** `{Object=}` 选项参数
+    * **cache** `{boolean=}` 是否缓存page 默认`false`
+    * **noCache** `{boolean=}` 是否不启用缓存 默认`false`
+* _return_ `{Page}` [Page](doc/page.md)对象

@@ -144,7 +144,7 @@ define(function (require) {
             front.emit('afterleave');
             // 如果前景页与后景页的容器元素相同
             // 则不再对前景页进行销毁操作
-            if (front.main != back.main) {
+            if (front.main !== back.main) {
                 front.remove();
             }
         }
@@ -208,7 +208,7 @@ define(function (require) {
          * @param {Object} options 全局配置参数 参考`./config.js`
          */
         init: function (ele, options) {
-            if (typeof ele == 'string' || ele instanceof String) {
+            if (typeof ele === 'string' || ele instanceof String) {
                 ele = document.getElementById(ele);
             }
             config = extend(config, options);
@@ -231,7 +231,7 @@ define(function (require) {
          */
         load: function (url, options) {
             options = options || {};
-            
+
             // 创建新页面
             var page;
             if (!options.noCache) {

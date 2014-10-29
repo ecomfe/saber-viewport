@@ -19,22 +19,22 @@ define(function (require) {
 
         config.viewport.insertBefore(backEle, frontEle);
         var frontSize = util.getSize(frontEle);
-        util.setStyles(backEle, { opacity: 0 });
+        util.setStyles(backEle, {opacity: 0});
         util.setStyles(
-            frontEle, 
+            frontEle,
             {
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 opacity: 1,
                 width: frontSize.width + 'px'
-            }, 
+            },
             true
         );
 
         runner.transition(
-            frontEle, 
-            { opacity: 0 },
+            frontEle,
+            {opacity: 0},
             {
                 duration: duration,
                 timing: timing
@@ -42,8 +42,8 @@ define(function (require) {
         );
 
         var promise = runner.transition(
-            backEle, 
-            { opacity: 1 },
+            backEle,
+            {opacity: 1},
             {
                 duration: duration,
                 timing: timing

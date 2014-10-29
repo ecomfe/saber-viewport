@@ -65,7 +65,7 @@ define(function (require) {
                     );
 
         pos.left += Math.max(
-                        doc.documentElement.scrollLeft, 
+                        doc.documentElement.scrollLeft,
                         doc.body.scrollLeft
                     );
 

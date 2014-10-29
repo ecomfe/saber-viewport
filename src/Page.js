@@ -52,7 +52,7 @@ define(function (require) {
      */
     Page.prototype.getBar = function () {
         var main = this.main;
-        
+
         var elements = dom.queryAll('[' + ATTR_BAR + ']', main);
         var bars = {};
 
@@ -84,9 +84,9 @@ define(function (require) {
      */
     Page.prototype.clone = function (options) {
         var res = new Page(
-                this.url, 
-                this.viewport, 
-                { 
+                this.url,
+                this.viewport,
+                {
                     cached: options.cached,
                     main: this.main,
                     data: this.data,

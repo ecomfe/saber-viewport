@@ -10,7 +10,7 @@ define(function (require) {
 
     /**
      * 转场处理器
-     * 
+     *
      * @type {Object}
      */
     var handlers = {};
@@ -31,7 +31,7 @@ define(function (require) {
             || !options.frontPage // 没有前景页
             // 前景页与后景页容器元素相同
             // 被缓存的page同时加载两次时出现
-            || options.frontPage.main == options.backPage.main
+            || options.frontPage.main === options.backPage.main
         ) {
             config.viewport.appendChild(options.backPage.main);
             resolver.fulfill();

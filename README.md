@@ -102,7 +102,7 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
 
 #### load(url[, options])
 
-创建新页面的容器，返回`Page`对象。页面的具体渲染需要通过`Page.main`属性获取容器元素后自行完成
+创建新页面的容器，返回[Page](doc/page.md)对象。页面的具体渲染需要通过`Page.main`属性获取容器元素后自行完成
 
 * **url** `{string}` 页面的URL，用于页面标示
 * **options** `{Object=}` 选项参数

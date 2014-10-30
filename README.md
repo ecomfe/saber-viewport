@@ -109,3 +109,7 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
     * **cache** `{boolean=}` 是否缓存page 默认`false`
     * **noCache** `{boolean=}` 是否不启用缓存 默认`false`
 * _return_ `{Page}` [Page](doc/page.md)对象
+
+### Classes
+
+* [Page](doc/page.md) 页面对象

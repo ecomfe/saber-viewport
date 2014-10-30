@@ -26,7 +26,7 @@ Page
    * **options.duration** `{number=}` 转场动画时长，单位为秒
    * **options.timing** `{string=}` 转场缓动效果，取值请参考CSS3中的[transition-timing-function](http://www.w3.org/TR/css3-transitions/#transition-timing-function-property)
    * **options.transform** `{boolean=}` 是否使用[css transform](http://www.w3.org/TR/css-transforms/)进行转场设置
-* _return_ `{Promise}` 表示转场完成的[Promise](https://github.com/ecomfe/saber-promise)对象
+* _return_ `{Promise}` 表示转场[Promise](https://github.com/ecomfe/saber-promise)对象
 
 ### on(eventName, callback)
 

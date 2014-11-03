@@ -21,7 +21,7 @@ define(function (require) {
         Object.keys(propertys).forEach(function (name) {
             dom.setStyle(ele, name, propertys[name]);
         });
-        if (forceRefresh && ele.offsetWidth) {}
+        forceRefresh && ele.offsetWidth;
     };
 
     /**
@@ -65,7 +65,7 @@ define(function (require) {
                     );
 
         pos.left += Math.max(
-                        doc.documentElement.scrollLeft, 
+                        doc.documentElement.scrollLeft,
                         doc.body.scrollLeft
                     );
 

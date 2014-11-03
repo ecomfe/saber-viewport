@@ -6,6 +6,7 @@
 define(function () {
 
     var mask;
+    var exports = {};
 
     /**
      * 阻止事件传播与默认行为
@@ -36,8 +37,6 @@ define(function () {
         document.body.appendChild(mask);
 
     }
-
-    var exports = {};
 
     /**
      * mask样式名

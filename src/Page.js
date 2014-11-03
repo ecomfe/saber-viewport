@@ -52,7 +52,7 @@ define(function (require) {
      */
     Page.prototype.getBar = function () {
         var main = this.main;
-        
+
         var elements = dom.queryAll('[' + ATTR_BAR + ']', main);
         var bars = {};
 
@@ -84,9 +84,9 @@ define(function (require) {
      */
     Page.prototype.clone = function (options) {
         var res = new Page(
-                this.url, 
-                this.viewport, 
-                { 
+                this.url,
+                this.viewport,
+                {
                     cached: options.cached,
                     main: this.main,
                     data: this.data,
@@ -122,7 +122,7 @@ define(function (require) {
      * @param {boolean} force 强制移除 忽略缓存
      */
     Page.prototype.remove = function (force) {
-        if (!this.cached || force == true) {
+        if (!this.cached || force === true) {
             dispose(this);
         }
         else if (this.main && this.main.parentNode) {

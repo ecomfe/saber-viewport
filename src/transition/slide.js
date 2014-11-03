@@ -51,7 +51,7 @@ define(function (require) {
             var bar = extend(frontBar, backBar);
             Object.keys(bar).forEach(function (key) {
                 if (commonKeys.indexOf(key) < 0
-                    && dom.getStyle(bar[key], 'position') == 'fixed'
+                    && dom.getStyle(bar[key], 'position') === 'fixed'
                 ) {
                     eles.push(bar[key]);
                 }
@@ -161,7 +161,7 @@ define(function (require) {
         util.setStyles(container, styles);
 
         container.appendChild(frontEle);
-        if (options.direction == DIRECTION.LEFT) {
+        if (options.direction === DIRECTION.LEFT) {
             container.insertBefore(backEle, frontEle);
         }
         else {
@@ -169,17 +169,16 @@ define(function (require) {
         }
 
         // 设置浮动
-        //
         // 添加position:relative 使视图容器成为可定位元素
         // 使内部的absolute元素能参与转场效果
         // 如果内部元素起初不相当于参考视图容器定位则需要在转场前后(利用事件)进行位置调整
         util.setStyles(frontEle, {
-            float: 'left',
+            'float': 'left',
             width: width + 'px',
             position: 'relative'
         });
         util.setStyles(backEle, {
-            float: 'left',
+            'float': 'left',
             width: width + 'px',
             position: 'relative'
         });
@@ -195,18 +194,18 @@ define(function (require) {
         runProcessor('before', frontPage, backPage, options);
 
         // 设置初始容器位置
-        if (options.direction == DIRECTION.LEFT) {
+        if (options.direction === DIRECTION.LEFT) {
             styles = options.transform
-                ? { transform: 'translate3d(-'+ frontPage.main.offsetWidth +'px, 0, 0)' }
-                : { marginLeft: -frontPage.main.offsetWidth + 'px' };
+                ? {transform: 'translate3d(-' + frontPage.main.offsetWidth + 'px, 0, 0)'}
+                : {marginLeft: -frontPage.main.offsetWidth + 'px'};
         }
         else if (options.transform) {
             // 设置默认的起始状态
             // 防止转场过程中产生莫名其妙的渲染问题
-            styles.transform = 'translate3d(0, 0, 0)'; 
+            styles.transform = 'translate3d(0, 0, 0)';
         }
         util.setStyles(
-            container, 
+            container,
             styles,
             true
         );
@@ -246,7 +245,7 @@ define(function (require) {
 
         // 获取相同的类型的bar
         var keys = getCommonKey(
-                frontBars || {}, 
+                frontBars || {},
                 backBars || {}
             );
 
@@ -259,20 +258,20 @@ define(function (require) {
 
             // name相同表示bar不需要转场效果
             // name不同表示bar要进行滑入渐变转场
-            item.change = item.front.getAttribute('data-name') 
-                            != item.back.getAttribute('data-name');
+            item.change = item.front.getAttribute('data-name')
+                            !== item.back.getAttribute('data-name');
 
             var front = item.front;
             var pos = util.getPosition(front);
             var position = dom.getStyle(front, 'position');
-            
+
             // 创建一个替代元素进行占位
             var ele;
-            if (position != 'fixed' && position != 'position') {
+            if (position !== 'fixed' && position !== 'position') {
                 // static 与 relative 的bar 需要具有样式的占位元素
                 ele = document.createElement(front.tagName);
                 ele.className = front.className;
-                ele.style.cssText += ';' 
+                ele.style.cssText += ';'
                                     + front.style.cssText
                                     + ';padding:0;border:0'
                                     + ';width:' + front.offsetWidth + 'px'
@@ -288,17 +287,17 @@ define(function (require) {
             front.parentNode.insertBefore(ele, front);
 
             // fixed定位的bar需要移动到body下
-            // transform时fixed定位是相对与transform的父容器 
+            // transform时fixed定位是相对与transform的父容器
             // 而非body
-            if (options.transform 
-                && dom.getStyle(item.back, 'position') == 'fixed'
+            if (options.transform
+                && dom.getStyle(item.back, 'position') === 'fixed'
             ) {
                 var block = item.backBlock = document.createElement('ins');
                 block.style.display = 'none';
                 item.back.parentNode.insertBefore(block, item.back);
                 document.body.appendChild(item.back);
             }
-            
+
             // 将前页中的bar放置到body中并进行绝对定位
             // 遮挡住后页相同位置的待转入bar
             ele = front;
@@ -339,16 +338,16 @@ define(function (require) {
             var frontBar = item.front;
             var frontBarBlock = item.frontBlock;
             var parentNode = frontBarBlock.parentNode;
-            frontBar.style.cssText += ';' 
+            frontBar.style.cssText += ';'
                                     + item.frontCSSBack
                                     + ';opacity:1';
             parentNode.insertBefore(frontBar, frontBarBlock);
             parentNode.removeChild(frontBarBlock);
         });
-        
+
         // 还原设置的样式
         util.setStyles(backEle, {
-            float: 'none',
+            'float': 'none',
             width: 'auto',
             position: 'static'
         });
@@ -357,7 +356,7 @@ define(function (require) {
         viewport.appendChild(backEle);
         // frontpage已经从DOM树中移除 transitionend事件无法执行
         // 需要手动清楚动画效果
-        util.setStyles(frontPage.main, { 'transition' : '' });
+        util.setStyles(frontPage.main, {'transition': ''});
         // 删除container
         viewport.removeChild(container);
 
@@ -372,7 +371,7 @@ define(function (require) {
         });
 
         runProcessor('after', frontPage, backPage);
-        
+
         resolver.fulfill();
     }
 
@@ -395,7 +394,7 @@ define(function (require) {
         var frontPage = options.frontPage;
         var backPage = options.backPage;
 
-        options.transform = options.transform !== undefined 
+        options.transform = options.transform !== undefined
                                 ? options.transform
                                 : config.transform;
 
@@ -406,7 +405,7 @@ define(function (require) {
         // 设置处理器
         processor = extend(options.processor || {}, buildinProcessor);
 
-        // TODO 
+        // TODO
         // PROFORMANCE
         var container = prepare(frontPage, backPage, options);
 
@@ -418,8 +417,8 @@ define(function (require) {
             // 设置前页bar的转化效果
             transitions.push(
                 runner.transition(
-                    item.front, 
-                    { opacity: 0 },
+                    item.front,
+                    {opacity: 0},
                     {
                         // 如果不需要转场效果则设置成突变转化
                         // android 2.3 不支持 steps
@@ -432,12 +431,12 @@ define(function (require) {
             );
         });
 
-        var value = options.direction == DIRECTION.LEFT 
-                        ? 0 
+        var value = options.direction === DIRECTION.LEFT
+                        ? 0
                         : -frontPage.main.offsetWidth;
         var styles = options.transform
-                        ? { transform: 'translate3d(' + value + 'px, 0, 0)' }
-                        : { marginLeft: value + 'px' };
+                        ? {transform: 'translate3d(' + value + 'px, 0, 0)'}
+                        : {marginLeft: value + 'px'};
 
         var promise = runner.transition(
                 container,
@@ -449,7 +448,7 @@ define(function (require) {
             );
 
         transitions.push(promise);
-        
+
         // 动画完成后执行finish收尾工作
         Resolver.all(transitions).then(curry(finish, frontPage, backPage, bars, resolver));
     }

@@ -31,7 +31,6 @@ define(function (require) {
      * 修正view的render
      *
      * @inner
-     * @param {HTMLElement} ele Page主容器
      * @param {Page} page 待转场页面
      */
     function fixRender(page) {
@@ -43,7 +42,7 @@ define(function (require) {
         document.body.appendChild(ele);
         this.view.container = ele.id;
 
-        // 如果有前页 
+        // 如果有前页
         // 则将待转场action的enterDocument延后执行(放到page的afterleave事件中)
         // 在page的afterenter触发前 会同时存在两个页面 id、className神马的可能会冲突的...
         page.on('afterenter', delayEnterDoc(this));
@@ -68,7 +67,7 @@ define(function (require) {
 
             // 修正render
             context.action.on(
-                'beforerender', 
+                'beforerender',
                 curry(fixRender, page)
             );
 
@@ -86,7 +85,7 @@ define(function (require) {
     return function (ele, options) {
         // 初始化viewport
         viewport.init(ele, options);
-        
+
         init();
     };
 });

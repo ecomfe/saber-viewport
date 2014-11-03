@@ -144,7 +144,7 @@ define(function (require) {
             front.emit('afterleave');
             // 如果前景页与后景页的容器元素相同
             // 则不再对前景页进行销毁操作
-            if (front.main != back.main) {
+            if (front.main !== back.main) {
                 front.remove();
             }
         }
@@ -175,7 +175,7 @@ define(function (require) {
      * @param {Page} page 将要进行转场操作的页面
      * @param {string|boolean=} type 转场类型
      * @param {object=} options 转场参数
-     * @param {Promise}
+     * @return {Promise}
      */
     controller.transition = function (page, type, options) {
         // 转场页面不是当前后景页面
@@ -208,7 +208,7 @@ define(function (require) {
          * @param {Object} options 全局配置参数 参考`./config.js`
          */
         init: function (ele, options) {
-            if (typeof ele == 'string' || ele instanceof String) {
+            if (typeof ele === 'string' || ele instanceof String) {
                 ele = document.getElementById(ele);
             }
             config = extend(config, options);
@@ -231,7 +231,7 @@ define(function (require) {
          */
         load: function (url, options) {
             options = options || {};
-            
+
             // 创建新页面
             var page;
             if (!options.noCache) {
@@ -263,6 +263,21 @@ define(function (require) {
             page.hasVisited = visitHistory.indexOf(url) >= 0;
 
             return backPage = page;
+        },
+
+        /**
+         * 删除缓存
+         *
+         * @public
+         * @param {string} url
+         */
+        delCache: function (url) {
+            if (!url) {
+                cachedPage = {};
+            }
+            else if (cachedPage[url]) {
+                delete cachedPage[url];
+            }
         }
     };
 });

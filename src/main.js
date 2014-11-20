@@ -202,10 +202,12 @@ define(function (require) {
     return {
         /**
          * 初始化
+         * 返回当前的前景页
          *
          * @public
          * @param {HTMLElement|string} ele
          * @param {Object} options 全局配置参数 参考`./config.js`
+         * @return {Page}
          */
         init: function (ele, options) {
             if (typeof ele === 'string' || ele instanceof String) {
@@ -216,6 +218,7 @@ define(function (require) {
 
             initViewport();
             initFrontPgae();
+            return frontPage;
         },
 
         /**

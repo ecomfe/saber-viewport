@@ -87,28 +87,6 @@ define(function (require) {
     }
 
     /**
-     * 初始化前景页面
-     *
-     * @inner
-     */
-    function initFrontPgae() {
-        var viewport = config.viewport;
-        var children = dom.children(viewport);
-
-        if (children.length <= 0) {
-            return;
-        }
-
-        var page = new Page('__blank__');
-        children.forEach(function (item) {
-            page.main.appendChild(item);
-        });
-        viewport.appendChild(page.main);
-
-        frontPage = page;
-    }
-
-    /**
      * 转场开始前处理
      *
      * @inner
@@ -199,6 +177,39 @@ define(function (require) {
             .then(curry(afterTransition, frontPage, page));
     };
 
+    /**
+     * 初始化起始前景页面
+     *
+     * @inner
+     * @param {string=} url
+     * @param {Object=} options
+     * @return {?Page}
+     */
+    function initFrontPgae(url, options) {
+        var viewport = config.viewport;
+        var children = dom.children(viewport);
+
+        // 没有内容就不用创建Page了
+        if (children.length <= 0) {
+            return;
+        }
+
+        var page;
+        if (arguments.length <= 0) {
+            page = new Page('__blank__');
+        }
+        else {
+            page = new Page(url, controller, options);
+        }
+
+        children.forEach(function (item) {
+            page.main.appendChild(item);
+        });
+        viewport.appendChild(page.main);
+
+        return page;
+    }
+
     return {
         /**
          * 初始化
@@ -207,7 +218,6 @@ define(function (require) {
          * @public
          * @param {HTMLElement|string} ele
          * @param {Object} options 全局配置参数 参考`./config.js`
-         * @return {Page}
          */
         init: function (ele, options) {
             if (typeof ele === 'string' || ele instanceof String) {
@@ -217,8 +227,32 @@ define(function (require) {
             config.viewport = ele;
 
             initViewport();
-            initFrontPgae();
-            return frontPage;
+        },
+
+        /**
+         * 设置初始页面
+         *
+         * @public
+         * @param {string} url
+         * @param {Object} options 配置参数
+         * @param {boolean=} options.cached 是否缓存page
+         * @param {boolean=} options.noCache 是否使用缓存
+         * @return {Page} 页面对象
+         */
+        front: function (url, options) {
+            // 如果已经有前景页或者后景页
+            // 不再能对初始页进行设置
+            if (frontPage || backPage) {
+                return;
+            }
+
+            options = options || {};
+            page = initFrontPgae(url, options);
+            if (page && options.cached) {
+                cachedPage[url] = page;
+            }
+
+            return page;
         },
 
         /**
@@ -233,6 +267,12 @@ define(function (require) {
          * @return {Page} 页面对象
          */
         load: function (url, options) {
+            // 如果没有前景页
+            // 尝试构造一个
+            if (!frontPage) {
+                frontPage = initFrontPgae();
+            }
+
             options = options || {};
 
             // 创建新页面

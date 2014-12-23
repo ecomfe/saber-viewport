@@ -237,7 +237,7 @@ define(function (require) {
          * @param {Object} options 配置参数
          * @param {boolean=} options.cached 是否缓存page
          * @param {boolean=} options.noCache 是否使用缓存
-         * @return {Page} 页面对象
+         * @return {?Page} 页面对象
          */
         front: function (url, options) {
             // 如果已经有前景页或者后景页

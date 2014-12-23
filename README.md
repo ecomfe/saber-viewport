@@ -110,6 +110,15 @@ __注__：`saber-viewport`并不控制bar在页面中的位置、样式，这些
     * **noCache** `{boolean=}` 是否不启用缓存 默认`false`
 * _return_ `{Page}` [Page](doc/page.md)对象
 
+#### front(url[, options])
+
+初始化首屏页面，如果初始化成功则返回[Page](doc/page.md)对象，否则返回`undefined`
+
+* **url** `{string}` 页面的URL，用于页面标示
+* **options** `{Object=}` 选项参数
+    * **cache** `{boolean=}` 是否缓存page 默认`false`
+* _return_ `{?Page}` [Page](doc/page.md)对象
+
 ### Classes
 
 * [Page](doc/page.md) 页面对象

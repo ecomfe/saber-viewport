@@ -30,12 +30,12 @@ define(function (require) {
      *
      * @type {Object}
      */
-    var buildinProcessor = {};
+    var builtinProcessor = {};
 
     /**
      * fixed定位处理器
      */
-    buildinProcessor.fixed = {
+    builtinProcessor.fixed = {
         /**
          * transition前处理
          */
@@ -403,7 +403,7 @@ define(function (require) {
             || (backPage.hasVisited ? DIRECTION.LEFT : DIRECTION.RIGHT);
 
         // 设置处理器
-        processor = extend(options.processor || {}, buildinProcessor);
+        processor = extend(options.processor || {}, builtinProcessor);
 
         // TODO
         // PROFORMANCE

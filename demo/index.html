@@ -58,64 +58,86 @@
         <h1>Loadding...</h1>
     </div>
     <script>
-        require(['saber-viewport', 'saber-viewport/transition/fadeInOut', 'saber-viewport/transition/slide'], function (viewport) {
+        require(
+            [
+                'saber-viewport',
+                'saber-viewport/transition/fadeInOut',
+                'saber-viewport/transition/slide',
+                'saber-viewport/transition/popup'
+            ],
+            function (viewport) {
 
-            var transitions = ['slide', 'fadeInOut'];
+                require('saber-promise').disableExceptionCapture();
 
-            var curTransition;
+                var transitions = ['slide', 'fadeInOut', 'popup'];
 
-            function renderOpt(transition) {
-                var html = [];
-                for (var i = 0, item; item = transitions[i]; i++) {
-                    if (item == transition) {
-                        html.push('<u>' + item + '</u>');
+                var transitionOptions = {
+                    popup: {
+                        duration: 1
                     }
-                    else {
-                        html.push('<span>' + item + '</span>');
+                };
+
+                var curTransition;
+
+                function renderOpt(transition) {
+                    var html = [];
+                    for (var i = 0, item; item = transitions[i]; i++) {
+                        if (item == transition) {
+                            html.push('<u>' + item + '</u>');
+                        }
+                        else {
+                            html.push('<span>' + item + '</span>');
+                        }
                     }
+
+                    curTransition = transition;
+                    document.getElementById('opt').innerHTML = html.join('&nbsp;');
                 }
 
-                curTransition = transition;
-                document.getElementById('opt').innerHTML = html.join('&nbsp;');
+                function render(url) {
+                    var html = [
+                        '<h1>' + url + '</h1>',
+                        '<p>百度EFE（Excellent FrontEnd）技术体系，前身是ECOM前端团队，后经过技术的发展，逐渐形成一套完善的前端技术体系。</p>',
+                        '<p>EFE技术体系现由多个遵循该技术体系的前端团队所组成。E(Excellent)代表我们追求卓越的技术态度。</p>',
+                        '<div class="bar" data-viewport-bar="nav" data-name="nav'+ url +'">'
+                    ];
+                    for (var i = 0; i < 5; i++) {
+                        html.push('<a data-link="'+ i +'" href="#">Link ' + i + '</a>&nbsp;');
+                    }
+                    html.push('</div>');
+                    return html.join('');
+                }
+
+                function load(url) {
+                    var page = viewport.load(url);
+                    var options = transitionOptions[curTransition] || {};
+                    page.main.innerHTML = render(url);
+                    page.enter(curTransition, options);
+                }
+
+                document.getElementById('opt').onclick = function (e) {
+                    var target = e.target;
+                    if (target.tagName.toLowerCase() == 'span') {
+                        var value = target.innerHTML;
+                        renderOpt(value);
+                        return false;
+                    }
+                };
+
+                document.getElementById('viewport').onclick = function (e) {
+                    var target = e.target;
+
+                    if (target.tagName.toLowerCase() == 'a') {
+                        load(target.getAttribute('data-link'));
+                        return false;
+                    }
+                };
+
+                renderOpt('slide');
+                viewport.init(document.getElementById('viewport'));
+                load('0');
             }
-
-            function render(url) {
-                var html = ['<h1>' + url + '</h1>', '<div class="bar" data-viewport-bar="nav" data-name="nav'+ url +'">'];
-                for (var i = 0; i < 5; i++) {
-                    html.push('<a data-link="'+ i +'" href="#">Link ' + i + '</a>&nbsp;');
-                }
-                html.push('</div>');
-                return html.join('');
-            }
-            
-            function load(url) {
-                var page = viewport.load(url);
-                page.main.innerHTML = render(url);
-                page.enter(curTransition);
-            }
-
-            document.getElementById('opt').onclick = function (e) {
-                var target = e.target; 
-                if (target.tagName.toLowerCase() == 'span') {
-                    var value = target.innerHTML;
-                    renderOpt(value);
-                    return false;
-                }
-            };
-
-            document.getElementById('viewport').onclick = function (e) {
-                var target = e.target;
-
-                if (target.tagName.toLowerCase() == 'a') {
-                    load(target.getAttribute('data-link'));
-                    return false;
-                }
-            };
-
-            renderOpt('slide');
-            viewport.init(document.getElementById('viewport'));
-            load('0');
-        });
+        );
     </script>
 </body>
 </html>

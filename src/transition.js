@@ -21,6 +21,9 @@ define(function (require) {
      * @public
      * @param {string|boolean=} type 转场类型
      * @param {Object} options 转场参数
+     * @param {Page} options.frontPage 转场前页
+     * @param {Page} options.backPage 转场后页
+     * @return {Promise}
      */
     function transition(type, options) {
         var resolver = new Resolver();

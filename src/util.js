@@ -13,7 +13,7 @@ define(function (require) {
      * 设置元素样式
      *
      * @public
-     * @param {HTMLElement} ele
+     * @param {HTMLElement} ele 目标元素
      * @param {Object} properties 样式
      * @param {boolean=} forceRefresh 是否强制刷新
      */
@@ -28,7 +28,7 @@ define(function (require) {
      * 获取元素的大小
      *
      * @public
-     * @param {HTMLElement} ele
+     * @param {HTMLElement} ele 目标元素
      * @return {Object}
      */
     exports.getSize = function (ele) {
@@ -51,7 +51,7 @@ define(function (require) {
      * 获取元素相对页面的位置
      *
      * @public
-     * @param {HTMLElement} ele
+     * @param {HTMLElement} ele 目标元素
      * @return {Object}
      */
     exports.getPosition = function (ele) {

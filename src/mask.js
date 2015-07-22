@@ -12,6 +12,7 @@ define(function () {
      * 阻止事件传播与默认行为
      *
      * @inner
+     * @param {Object} e 事件对象
      */
     function stopEvent(e) {
         e.stopPropagation();

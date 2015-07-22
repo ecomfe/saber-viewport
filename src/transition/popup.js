@@ -9,7 +9,6 @@ define(function (require) {
     var extend = require('saber-lang/extend');
     var curry = require('saber-lang/curry');
     var runner = require('saber-run');
-    var dom = require('saber-dom');
     var util = require('../util');
     var config = require('../config');
 
@@ -27,6 +26,12 @@ define(function (require) {
      * 转场前准备
      *
      * @inner
+     * @param {Page} frontPage 转场前页（转出页）
+     * @param {Page} backPage 转场后页（转入页）
+     * @param {Object} options 转场参数
+     * @param {string} options.height viewport 的设计高度（带单位）
+     * @param {string} options.direction 转场方向
+     * @return {HTMLElement} 转场容器
      */
     function prepare(frontPage, backPage, options) {
         var viewport = config.viewport;
@@ -66,27 +71,27 @@ define(function (require) {
 
         if (options.direction === DIRECTION.FORWARD) {
             frontStyles = {
-                transform: 'scale3d(1, 1, 1)',
-                opacity: 1,
+                'transform': 'scale3d(1, 1, 1)',
+                'opacity': 1,
                 'z-index': 1
             };
 
             backStyles = {
-                transform: 'scale3d(0, 0, 1)',
-                opacity: 0,
+                'transform': 'scale3d(0, 0, 1)',
+                'opacity': 0,
                 'z-index': 0
             };
         }
         else {
             frontStyles = {
-                transform: 'scale3d(1, 1, 1)',
-                opacity: 1,
+                'transform': 'scale3d(1, 1, 1)',
+                'opacity': 1,
                 'z-index': 0
             };
 
             backStyles = {
-                transform: 'scale3d(2, 2, 1)',
-                opacity: 0,
+                'transform': 'scale3d(2, 2, 1)',
+                'opacity': 0,
                 'z-index': 1
             };
         }
@@ -114,6 +119,14 @@ define(function (require) {
      * 转场过程
      *
      * @inner
+     * @param {Page} frontPage 转场前页（转出页）
+     * @param {Page} backPage 转场后页（转入页）
+     * @param {Object} options 转场参数
+     * @param {number} options.duration 动画时间 秒为单位
+     * @param {string} options.frontTiming 前页过渡速度曲线
+     * @param {string} options.backTiming 后页过渡速度曲线
+     * @param {number} options.gap 转场前后页动画开始时间的间隔，默认为 duration 的三分之一
+     * @param {string} options.direction 转场方向
      * @return {Promise}
      */
     function running(frontPage, backPage, options) {
@@ -152,29 +165,35 @@ define(function (require) {
      * 转场结束
      *
      * @inner
+     * @param {Page} frontPage 转场前页（转出页）
+     * @param {Page} backPage 转场后页（转入页）
+     * @param {HTMLElement} container 转场容器
+     * @param {Resolver} resolver Resolver 对象
      */
     function finish(frontPage, backPage, container, resolver) {
-        console.log('run finish()');
         var viewport = config.viewport;
         var backEle = backPage.main;
 
         // 还原设置的样式
-        util.setStyles(backEle, {
-            position: 'static',
-            top: '',
-            right: '',
-            bottom: '',
-            left: '',
-            transform: '',
-            opacity: '',
-            'z-index': ''
-        });
+        util.setStyles(
+            backEle,
+            {
+                'position': 'static',
+                'top': '',
+                'right': '',
+                'bottom': '',
+                'left': '',
+                'transform': '',
+                'opacity': '',
+                'z-index': ''
+            }
+        );
 
         // 调整 DOM 结构
         viewport.appendChild(backEle);
         // frontPage 已经从 DOM 树中移除 transitionEnd 事件无法执行
         // 需要手动清除动画效果
-        util.setStyles(frontPage.main, {'transition': ''});
+        util.setStyles(frontPage.main, {transition: ''});
         viewport.removeChild(container);
 
         resolver.fulfill();
@@ -191,28 +210,29 @@ define(function (require) {
      * @param {string} options.frontTiming 前页过渡速度曲线
      * @param {string} options.backTiming 后页过渡速度曲线
      * @param {string} options.height viewport 的设计高度（带单位）
-     * @param {number} options.gap 转场前后页动画开始时间的间隔
+     * @param {number} options.gap 转场前后页动画开始时间的间隔，默认为 duration 的三分之一
+     * @param {string} options.direction 转场方向
      */
-     function popup(resolver, options) {
+    function popup(resolver, options) {
         var backPage = options.backPage;
         var frontPage = options.frontPage;
 
-        // 参数初始化
-        options.duration = options.duration || config.duration;
-        options.frontTiming = options.frontTiming || 'out';
-        options.backTiming = options.backTiming || 'in';
+        var curOptions = {};
+        curOptions.duration = options.duration || config.duration;
+        curOptions.frontTiming = options.frontTiming || 'out';
+        curOptions.backTiming = options.backTiming || 'in';
         // 想取得最佳效果，需设置 height 选项
-        options.height = options.height || document.documentElement.clientHeight + 'px';
-        options.gap = options.gap || options.duration / 3;
+        curOptions.height = options.height || document.documentElement.clientHeight + 'px';
+        curOptions.gap = options.gap || options.duration / 3;
 
         // 转场方向设置
-        options.direction = options.direction || (backPage.hasVisited ? DIRECTION.BACKWARD : DIRECTION.FORWARD);
+        curOptions.direction = options.direction || (backPage.hasVisited ? DIRECTION.BACKWARD : DIRECTION.FORWARD);
 
         // 准备并获取页面容器
-        var container = prepare(frontPage, backPage, options);
+        var container = prepare(frontPage, backPage, curOptions);
 
         // 开始转场动画
-        running(frontPage, backPage, options)
+        running(frontPage, backPage, curOptions)
             .then(curry(finish, frontPage, backPage, container, resolver));
     }
 

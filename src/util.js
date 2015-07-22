@@ -14,12 +14,12 @@ define(function (require) {
      *
      * @public
      * @param {HTMLElement} ele
-     * @param {Object} propertys 样式
-     * @param {boolean} forceRefresh 是否强制刷新
+     * @param {Object} properties 样式
+     * @param {boolean=} forceRefresh 是否强制刷新
      */
-    exports.setStyles = function (ele, propertys, forceRefresh) {
-        Object.keys(propertys).forEach(function (name) {
-            dom.setStyle(ele, name, propertys[name]);
+    exports.setStyles = function (ele, properties, forceRefresh) {
+        Object.keys(properties).forEach(function (name) {
+            dom.setStyle(ele, name, properties[name]);
         });
         forceRefresh && ele.offsetWidth;
     };

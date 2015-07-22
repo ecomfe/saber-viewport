@@ -100,7 +100,7 @@ define(function (require) {
                     width: dom.getStyle(ele, 'width') + 'px',
                     height: dom.getStyle(ele, 'height') + 'px',
                     bottom: 'auto',
-                    right: 'atuo'
+                    right: 'auto'
                 });
             });
         },
@@ -183,7 +183,7 @@ define(function (require) {
             position: 'relative'
         });
 
-        // 设置container的负magrinLeft
+        // 设置container的负marginLeft
         // 用于左滑入
         // 强制应用 不然后续再设置动画没有效果
         // 强制刷新得先将节点加入DOM树中
@@ -354,7 +354,7 @@ define(function (require) {
 
         // 调整DOM结构
         viewport.appendChild(backEle);
-        // frontpage已经从DOM树中移除 transitionend事件无法执行
+        // frontPage已经从DOM树中移除 transitionEnd事件无法执行
         // 需要手动清楚动画效果
         util.setStyles(frontPage.main, {'transition': ''});
         // 删除container

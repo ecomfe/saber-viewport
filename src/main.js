@@ -185,7 +185,7 @@ define(function (require) {
      * @param {Object=} options
      * @return {?Page}
      */
-    function initFrontPgae(url, options) {
+    function initFrontPage(url, options) {
         var viewport = config.viewport;
         var children = dom.children(viewport);
 
@@ -247,7 +247,7 @@ define(function (require) {
             }
 
             options = options || {};
-            page = initFrontPgae(url, options);
+            page = initFrontPage(url, options);
             if (page && options.cached) {
                 cachedPage[url] = page;
             }
@@ -270,7 +270,7 @@ define(function (require) {
             // 如果没有前景页
             // 尝试构造一个
             if (!frontPage) {
-                frontPage = initFrontPgae();
+                frontPage = initFrontPage();
             }
 
             options = options || {};

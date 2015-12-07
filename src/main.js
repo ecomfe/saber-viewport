@@ -69,9 +69,9 @@ define(function (require) {
         after: function (front, back) {
             var container = config.scrollContainer;
             back.main.style.marginTop = null;
-            setTimeout(function () {
-                container.scrollTop = back.data.scrollTop || 0;
-            }, 10);
+            // 以前这里有一个延迟 10 ms，不过忘记为啥要加了...
+            // 目前看不加效果更好也没啥问题 ...(>_<)...
+            container.scrollTop = back.data.scrollTop || 0;
         }
     };
 

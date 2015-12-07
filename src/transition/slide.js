@@ -14,9 +14,9 @@ define(function (require) {
     var config = require('../config');
 
     var DIRECTION = {
-            LEFT: 'left',
-            RIGHT: 'right'
-        };
+        LEFT: 'left',
+        RIGHT: 'right'
+    };
 
     /**
      * 附加处理器
@@ -36,8 +36,12 @@ define(function (require) {
      * fixed定位处理器
      */
     builtinProcessor.fixed = {
+
         /**
          * transition前处理
+         *
+         * @param {Object} front 前景页
+         * @param {Object} back 后景页
          */
         before: function (front, back) {
             var eles = front.getFixed();
@@ -97,8 +101,8 @@ define(function (require) {
                     position: 'absolute',
                     top: pos.top + 'px',
                     left: pos.left + 'px',
-                    width: dom.getStyle(ele, 'width') + 'px',
-                    height: dom.getStyle(ele, 'height') + 'px',
+                    width: dom.getStyle(ele, 'width'),
+                    height: dom.getStyle(ele, 'height'),
                     bottom: 'auto',
                     right: 'auto'
                 });
@@ -127,7 +131,7 @@ define(function (require) {
      * @param {string} name 任务名称
      * @param {Page} front 前景页
      * @param {Page} back 后景页
-     * @param {Object} options
+     * @param {Object} options 配置参数
      */
     function runProcessor(name, front, back, options) {
         var item;
@@ -144,6 +148,10 @@ define(function (require) {
      * 添加包含元素，添加浮动等
      *
      * @inner
+     * @param {Object} frontPage 前景页
+     * @param {Object} backPage 后景页
+     * @param {Object} options 配置信息
+     * @return {HTMLElement}
      */
     function prepare(frontPage, backPage, options) {
         var viewport = config.viewport;
@@ -155,8 +163,8 @@ define(function (require) {
         var width = frontEle.offsetWidth;
 
         var styles = {
-                width: width * 2 + 'px'
-            };
+            width: width * 2 + 'px'
+        };
 
         util.setStyles(container, styles);
 
@@ -174,13 +182,13 @@ define(function (require) {
         // 如果内部元素起初不相当于参考视图容器定位则需要在转场前后(利用事件)进行位置调整
         util.setStyles(frontEle, {
             'float': 'left',
-            width: width + 'px',
-            position: 'relative'
+            'width': width + 'px',
+            'position': 'relative'
         });
         util.setStyles(backEle, {
             'float': 'left',
-            width: width + 'px',
-            position: 'relative'
+            'width': width + 'px',
+            'position': 'relative'
         });
 
         // 设置container的负marginLeft
@@ -217,8 +225,8 @@ define(function (require) {
      * 获取两个对象相同的属性
      *
      * @inner
-     * @param {Object} obj1
-     * @param {Object} obj2
+     * @param {Object} obj1 比较对象A
+     * @param {Object} obj2 比较对象B
      * @return {Array.<string>}
      */
     function getCommonKey(obj1, obj2) {
@@ -238,6 +246,10 @@ define(function (require) {
      * 如果name不同需要滑入渐变转场效果
      *
      * @inner
+     * @param {Object} frontPage 前景页
+     * @param {Object} backPage 后景页
+     * @param {Object} options 配置信息
+     * @return {Array.<HTMLElement>}
      */
     function prepareBars(frontPage, backPage, options) {
         var frontBars = frontPage.getBar();
@@ -245,9 +257,9 @@ define(function (require) {
 
         // 获取相同的类型的bar
         var keys = getCommonKey(
-                frontBars || {},
-                backBars || {}
-            );
+            frontBars || {},
+            backBars || {}
+        );
 
         var res = [];
         keys.forEach(function (key) {
@@ -326,6 +338,10 @@ define(function (require) {
      * 恢复设置的样式属性
      *
      * @inner
+     * @param {Object} frontPage 前景页
+     * @param {Object} backPage 后景页
+     * @param {Array} bars bar 元素数组
+     * @param {Object} resolver Promise resolver
      */
     function finish(frontPage, backPage, bars, resolver) {
         var viewport = config.viewport;
@@ -348,15 +364,15 @@ define(function (require) {
         // 还原设置的样式
         util.setStyles(backEle, {
             'float': 'none',
-            width: 'auto',
-            position: 'static'
+            'width': 'auto',
+            'position': 'static'
         });
 
         // 调整DOM结构
         viewport.appendChild(backEle);
         // frontPage已经从DOM树中移除 transitionEnd事件无法执行
         // 需要手动清楚动画效果
-        util.setStyles(frontPage.main, {'transition': ''});
+        util.setStyles(frontPage.main, {transition: ''});
         // 删除container
         viewport.removeChild(container);
 
